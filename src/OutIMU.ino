@@ -2,30 +2,35 @@
  * Program to take axis data from IMU to track position over time.
  *
  * Name:    Thor Kopenkoskey
- * Date:   May 11, 2025
+ * Date:    May 11, 2025
  * Docs on IMU: https://github.com/stm32duino/LSM6DSOX
  * Docs on Magno: https://github.com/adafruit/Adafruit_LIS3MDL
  */
-// Basic demo for magnetometer readings from Adafruit LIS3MDL
 
 #include <Wire.h>
 #include <Adafruit_LIS3MDL.h>
 #include <Adafruit_Sensor.h>
+#include "LSM6DSOXSensor.h"
 
+// On Adafruit lsm6dsox sensor, LSM6DSOX_I2C_ADD_L is the default address
+LSM6DSOXSensor lsm6dsoxSensor = LSM6DSOXSensor(&Wire, LSM6DSOX_I2C_ADD_L);
 Adafruit_LIS3MDL lis3mdl;
 #define LIS3MDL_CLK 13
 #define LIS3MDL_MISO 12
 #define LIS3MDL_MOSI 11
 #define LIS3MDL_CS 10
 
-void setup(void) {
+void setup(void) 
+{
   Serial.begin(115200);
   while (!Serial) delay(10);     // will pause Zero, Leonardo, etc until serial console opens
 
   Serial.println("Adafruit LIS3MDL test!");
   
   // Try to initialize!
-  if (! lis3mdl.begin_I2C()) {          // hardware I2C mode, can pass in address & alt Wire
+  if (! lis3mdl.begin_I2C()) 
+  {          
+  // hardware I2C mode, can pass in address & alt Wire
   //if (! lis3mdl.begin_SPI(LIS3MDL_CS)) {  // hardware SPI mode
   //if (! lis3mdl.begin_SPI(LIS3MDL_CS, LIS3MDL_CLK, LIS3MDL_MISO, LIS3MDL_MOSI)) { // soft SPI
     Serial.println("Failed to find LIS3MDL chip");
@@ -35,7 +40,8 @@ void setup(void) {
 
   lis3mdl.setPerformanceMode(LIS3MDL_MEDIUMMODE);
   Serial.print("Performance mode set to: ");
-  switch (lis3mdl.getPerformanceMode()) {
+  switch (lis3mdl.getPerformanceMode()) 
+  {
     case LIS3MDL_LOWPOWERMODE: Serial.println("Low"); break;
     case LIS3MDL_MEDIUMMODE: Serial.println("Medium"); break;
     case LIS3MDL_HIGHMODE: Serial.println("High"); break;
@@ -45,7 +51,8 @@ void setup(void) {
   lis3mdl.setOperationMode(LIS3MDL_CONTINUOUSMODE);
   Serial.print("Operation mode set to: ");
   // Single shot mode will complete conversion and go into power down
-  switch (lis3mdl.getOperationMode()) {
+  switch (lis3mdl.getOperationMode()) 
+  {
     case LIS3MDL_CONTINUOUSMODE: Serial.println("Continuous"); break;
     case LIS3MDL_SINGLEMODE: Serial.println("Single mode"); break;
     case LIS3MDL_POWERDOWNMODE: Serial.println("Power-down"); break;
@@ -54,7 +61,8 @@ void setup(void) {
   lis3mdl.setDataRate(LIS3MDL_DATARATE_155_HZ);
   // You can check the datarate by looking at the frequency of the DRDY pin
   Serial.print("Data rate set to: ");
-  switch (lis3mdl.getDataRate()) {
+  switch (lis3mdl.getDataRate()) 
+  {
     case LIS3MDL_DATARATE_0_625_HZ: Serial.println("0.625 Hz"); break;
     case LIS3MDL_DATARATE_1_25_HZ: Serial.println("1.25 Hz"); break;
     case LIS3MDL_DATARATE_2_5_HZ: Serial.println("2.5 Hz"); break;
@@ -71,7 +79,8 @@ void setup(void) {
   
   lis3mdl.setRange(LIS3MDL_RANGE_4_GAUSS);
   Serial.print("Range set to: ");
-  switch (lis3mdl.getRange()) {
+  switch (lis3mdl.getRange()) 
+  {
     case LIS3MDL_RANGE_4_GAUSS: Serial.println("+-4 gauss"); break;
     case LIS3MDL_RANGE_8_GAUSS: Serial.println("+-8 gauss"); break;
     case LIS3MDL_RANGE_12_GAUSS: Serial.println("+-12 gauss"); break;
@@ -85,19 +94,13 @@ void setup(void) {
                           true); // enabled!
 }
 
-//This sensor uses I2C or SPI to communicate. For I2C it is then required to create a TwoWire interface before accessing to the sensors:
-#include "LSM6DSOXSensor.h"
 
-// Declare LSM6DSOX sensor. 
-// On Adafruit lsm6dsox sensor, LSM6DSOX_I2C_ADD_L is the default address
-LSM6DSOXSensor lsm6dsoxSensor = LSM6DSOXSensor(&Wire, LSM6DSOX_I2C_ADD_L);
-
-
-void setup() {
+void setup() 
+{
   Serial.begin(115200);
   Wire.begin();
 
-  // LSM6DSOX also supports 400kHz
+  // LSM6DSOX  supports 400kHz
   Wire.setClock(400000);
 
   // Init the sensor
@@ -106,16 +109,21 @@ void setup() {
   // Enable accelerometer and gyroscope, and check success
   if (lsm6dsoxSensor.Enable_X() == LSM6DSOX_OK && lsm6dsoxSensor.Enable_G() == LSM6DSOX_OK) {
     Serial.println("Success enabling accelero and gyro");
-  } else {
+  } 
+  else 
+  {
     Serial.println("Error enabling accelero and gyro");
   }
 
   // Read ID of device and check that it is correct
   uint8_t id;
   lsm6dsoxSensor.ReadID(&id);
-  if (id != LSM6DSOX_ID) {
+  if (id != LSM6DSOX_ID) 
+  {
     Serial.println("Wrong ID for LSM6DSOX sensor. Check that device is plugged");
-  } else {
+  } 
+  else 
+  {
     Serial.println("Receviced correct ID for LSM6DSOX sensor");
   }
 
@@ -141,7 +149,8 @@ void loop() {
   // Read accelerometer
   uint8_t acceleroStatus;
   lsm6dsoxSensor.Get_X_DRDY_Status(&acceleroStatus);
-  if (acceleroStatus == 1) { // Status == 1 means a new data is available
+  if (acceleroStatus == 1) 
+  { // Status == 1 means a new data is available
     int32_t acceleration[3];
     lsm6dsoxSensor.Get_X_Axes(acceleration);
     
@@ -152,7 +161,8 @@ void loop() {
   // Read gyroscope
   uint8_t gyroStatus;
   lsm6dsoxSensor.Get_G_DRDY_Status(&gyroStatus);
-  if (gyroStatus == 1) { // Status == 1 means a new data is available
+  if (gyroStatus == 1) 
+  { // Status == 1 means a new data is available
     int32_t rotation[3];
     lsm6dsoxSensor.Get_G_Axes(rotation);
     // Plot data for each axis in milli degrees per second
@@ -163,12 +173,6 @@ void loop() {
   lis3mdl.read();      // get X Y and Z data at once
   // Then print out the raw data
   Serial.print("\nX:  "); Serial.print(lis3mdl.x); Serial.print("  \tY:  "); Serial.print(lis3mdl.y); Serial.print("  \tZ:  "); Serial.println(lis3mdl.z); 
-
-  /* Or....get a new sensor event, normalized to uTesla */
-  sensors_event_t event; 
-  lis3mdl.getEvent(&event);
-  /* Display the results (magnetic field is measured in uTesla) */
-  Serial.print("\tX: "); Serial.print(event.magnetic.x); Serial.print(" \tY: "); Serial.print(event.magnetic.y); Serial.print(" \tZ: "); Serial.print(event.magnetic.z); Serial.println(" uTesla ");
   Serial.println();
   
   delay(10);
