@@ -6,7 +6,7 @@
  * Docs on IMU: https://github.com/stm32duino/LSM6DSOX
  * Docs on Magno: https://github.com/adafruit/Adafruit_LIS3MDL
  */
-
+#include <OutIMU.h>
 #include <Wire.h>
 #include <Adafruit_LIS3MDL.h>
 #include <Adafruit_Sensor.h>
