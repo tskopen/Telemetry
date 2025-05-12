@@ -1,201 +1,176 @@
-                                 Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
+/*
+ * Program to take axis data from IMU to track position over time.
+ *
+ * Name:    Thor Kopenkoskey
+ * Date:   May 11, 2025
+ * Docs on IMU: https://github.com/stm32duino/LSM6DSOX
+ * Docs on Magno: https://github.com/adafruit/Adafruit_LIS3MDL
+ */
+// Basic demo for magnetometer readings from Adafruit LIS3MDL
 
-   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+#include <Wire.h>
+#include <Adafruit_LIS3MDL.h>
+#include <Adafruit_Sensor.h>
 
-   1. Definitions.
+Adafruit_LIS3MDL lis3mdl;
+#define LIS3MDL_CLK 13
+#define LIS3MDL_MISO 12
+#define LIS3MDL_MOSI 11
+#define LIS3MDL_CS 10
 
-      "License" shall mean the terms and conditions for use, reproduction,
-      and distribution as defined by Sections 1 through 9 of this document.
+void setup(void) {
+  Serial.begin(115200);
+  while (!Serial) delay(10);     // will pause Zero, Leonardo, etc until serial console opens
 
-      "Licensor" shall mean the copyright owner or entity authorized by
-      the copyright owner that is granting the License.
+  Serial.println("Adafruit LIS3MDL test!");
+  
+  // Try to initialize!
+  if (! lis3mdl.begin_I2C()) {          // hardware I2C mode, can pass in address & alt Wire
+  //if (! lis3mdl.begin_SPI(LIS3MDL_CS)) {  // hardware SPI mode
+  //if (! lis3mdl.begin_SPI(LIS3MDL_CS, LIS3MDL_CLK, LIS3MDL_MISO, LIS3MDL_MOSI)) { // soft SPI
+    Serial.println("Failed to find LIS3MDL chip");
+    while (1) { delay(10); }
+  }
+  Serial.println("LIS3MDL Found!");
 
-      "Legal Entity" shall mean the union of the acting entity and all
-      other entities that control, are controlled by, or are under common
-      control with that entity. For the purposes of this definition,
-      "control" means (i) the power, direct or indirect, to cause the
-      direction or management of such entity, whether by contract or
-      otherwise, or (ii) ownership of fifty percent (50%) or more of the
-      outstanding shares, or (iii) beneficial ownership of such entity.
+  lis3mdl.setPerformanceMode(LIS3MDL_MEDIUMMODE);
+  Serial.print("Performance mode set to: ");
+  switch (lis3mdl.getPerformanceMode()) {
+    case LIS3MDL_LOWPOWERMODE: Serial.println("Low"); break;
+    case LIS3MDL_MEDIUMMODE: Serial.println("Medium"); break;
+    case LIS3MDL_HIGHMODE: Serial.println("High"); break;
+    case LIS3MDL_ULTRAHIGHMODE: Serial.println("Ultra-High"); break;
+  }
 
-      "You" (or "Your") shall mean an individual or Legal Entity
-      exercising permissions granted by this License.
+  lis3mdl.setOperationMode(LIS3MDL_CONTINUOUSMODE);
+  Serial.print("Operation mode set to: ");
+  // Single shot mode will complete conversion and go into power down
+  switch (lis3mdl.getOperationMode()) {
+    case LIS3MDL_CONTINUOUSMODE: Serial.println("Continuous"); break;
+    case LIS3MDL_SINGLEMODE: Serial.println("Single mode"); break;
+    case LIS3MDL_POWERDOWNMODE: Serial.println("Power-down"); break;
+  }
 
-      "Source" form shall mean the preferred form for making modifications,
-      including but not limited to software source code, documentation
-      source, and configuration files.
+  lis3mdl.setDataRate(LIS3MDL_DATARATE_155_HZ);
+  // You can check the datarate by looking at the frequency of the DRDY pin
+  Serial.print("Data rate set to: ");
+  switch (lis3mdl.getDataRate()) {
+    case LIS3MDL_DATARATE_0_625_HZ: Serial.println("0.625 Hz"); break;
+    case LIS3MDL_DATARATE_1_25_HZ: Serial.println("1.25 Hz"); break;
+    case LIS3MDL_DATARATE_2_5_HZ: Serial.println("2.5 Hz"); break;
+    case LIS3MDL_DATARATE_5_HZ: Serial.println("5 Hz"); break;
+    case LIS3MDL_DATARATE_10_HZ: Serial.println("10 Hz"); break;
+    case LIS3MDL_DATARATE_20_HZ: Serial.println("20 Hz"); break;
+    case LIS3MDL_DATARATE_40_HZ: Serial.println("40 Hz"); break;
+    case LIS3MDL_DATARATE_80_HZ: Serial.println("80 Hz"); break;
+    case LIS3MDL_DATARATE_155_HZ: Serial.println("155 Hz"); break;
+    case LIS3MDL_DATARATE_300_HZ: Serial.println("300 Hz"); break;
+    case LIS3MDL_DATARATE_560_HZ: Serial.println("560 Hz"); break;
+    case LIS3MDL_DATARATE_1000_HZ: Serial.println("1000 Hz"); break;
+  }
+  
+  lis3mdl.setRange(LIS3MDL_RANGE_4_GAUSS);
+  Serial.print("Range set to: ");
+  switch (lis3mdl.getRange()) {
+    case LIS3MDL_RANGE_4_GAUSS: Serial.println("+-4 gauss"); break;
+    case LIS3MDL_RANGE_8_GAUSS: Serial.println("+-8 gauss"); break;
+    case LIS3MDL_RANGE_12_GAUSS: Serial.println("+-12 gauss"); break;
+    case LIS3MDL_RANGE_16_GAUSS: Serial.println("+-16 gauss"); break;
+  }
 
-      "Object" form shall mean any form resulting from mechanical
-      transformation or translation of a Source form, including but
-      not limited to compiled object code, generated documentation,
-      and conversions to other media types.
+  lis3mdl.setIntThreshold(500);
+  lis3mdl.configInterrupt(false, false, true, // enable z axis
+                          true, // polarity
+                          false, // don't latch
+                          true); // enabled!
+}
 
-      "Work" shall mean the work of authorship, whether in Source or
-      Object form, made available under the License, as indicated by a
-      copyright notice that is included in or attached to the work
-      (an example is provided in the Appendix below).
+//This sensor uses I2C or SPI to communicate. For I2C it is then required to create a TwoWire interface before accessing to the sensors:
+#include "LSM6DSOXSensor.h"
 
-      "Derivative Works" shall mean any work, whether in Source or Object
-      form, that is based on (or derived from) the Work and for which the
-      editorial revisions, annotations, elaborations, or other modifications
-      represent, as a whole, an original work of authorship. For the purposes
-      of this License, Derivative Works shall not include works that remain
-      separable from, or merely link (or bind by name) to the interfaces of,
-      the Work and Derivative Works thereof.
+// Declare LSM6DSOX sensor. 
+// On Adafruit lsm6dsox sensor, LSM6DSOX_I2C_ADD_L is the default address
+LSM6DSOXSensor lsm6dsoxSensor = LSM6DSOXSensor(&Wire, LSM6DSOX_I2C_ADD_L);
 
-      "Contribution" shall mean any work of authorship, including
-      the original version of the Work and any modifications or additions
-      to that Work or Derivative Works thereof, that is intentionally
-      submitted to Licensor for inclusion in the Work by the copyright owner
-      or by an individual or Legal Entity authorized to submit on behalf of
-      the copyright owner. For the purposes of this definition, "submitted"
-      means any form of electronic, verbal, or written communication sent
-      to the Licensor or its representatives, including but not limited to
-      communication on electronic mailing lists, source code control systems,
-      and issue tracking systems that are managed by, or on behalf of, the
-      Licensor for the purpose of discussing and improving the Work, but
-      excluding communication that is conspicuously marked or otherwise
-      designated in writing by the copyright owner as "Not a Contribution."
 
-      "Contributor" shall mean Licensor and any individual or Legal Entity
-      on behalf of whom a Contribution has been received by Licensor and
-      subsequently incorporated within the Work.
+void setup() {
+  Serial.begin(115200);
+  Wire.begin();
 
-   2. Grant of Copyright License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      copyright license to reproduce, prepare Derivative Works of,
-      publicly display, publicly perform, sublicense, and distribute the
-      Work and such Derivative Works in Source or Object form.
+  // LSM6DSOX also supports 400kHz
+  Wire.setClock(400000);
 
-   3. Grant of Patent License. Subject to the terms and conditions of
-      this License, each Contributor hereby grants to You a perpetual,
-      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-      (except as stated in this section) patent license to make, have made,
-      use, offer to sell, sell, import, and otherwise transfer the Work,
-      where such license applies only to those patent claims licensable
-      by such Contributor that are necessarily infringed by their
-      Contribution(s) alone or by combination of their Contribution(s)
-      with the Work to which such Contribution(s) was submitted. If You
-      institute patent litigation against any entity (including a
-      cross-claim or counterclaim in a lawsuit) alleging that the Work
-      or a Contribution incorporated within the Work constitutes direct
-      or contributory patent infringement, then any patent licenses
-      granted to You under this License for that Work shall terminate
-      as of the date such litigation is filed.
+  // Init the sensor
+  lsm6dsoxSensor.begin();
 
-   4. Redistribution. You may reproduce and distribute copies of the
-      Work or Derivative Works thereof in any medium, with or without
-      modifications, and in Source or Object form, provided that You
-      meet the following conditions:
+  // Enable accelerometer and gyroscope, and check success
+  if (lsm6dsoxSensor.Enable_X() == LSM6DSOX_OK && lsm6dsoxSensor.Enable_G() == LSM6DSOX_OK) {
+    Serial.println("Success enabling accelero and gyro");
+  } else {
+    Serial.println("Error enabling accelero and gyro");
+  }
 
-      (a) You must give any other recipients of the Work or
-          Derivative Works a copy of this License; and
+  // Read ID of device and check that it is correct
+  uint8_t id;
+  lsm6dsoxSensor.ReadID(&id);
+  if (id != LSM6DSOX_ID) {
+    Serial.println("Wrong ID for LSM6DSOX sensor. Check that device is plugged");
+  } else {
+    Serial.println("Receviced correct ID for LSM6DSOX sensor");
+  }
 
-      (b) You must cause any modified files to carry prominent notices
-          stating that You changed the files; and
+  // Set accelerometer scale at +- 2G. Available values are +- 2, 4, 8, 16 G
+  lsm6dsoxSensor.Set_X_FS(2);
 
-      (c) You must retain, in the Source form of any Derivative Works
-          that You distribute, all copyright, patent, trademark, and
-          attribution notices from the Source form of the Work,
-          excluding those notices that do not pertain to any part of
-          the Derivative Works; and
+  // Set gyroscope scale at +- 125 degres per second. Available values are +- 125, 250, 500, 1000, 2000 dps
+  lsm6dsoxSensor.Set_G_FS(125);
 
-      (d) If the Work includes a "NOTICE" text file as part of its
-          distribution, then any Derivative Works that You distribute must
-          include a readable copy of the attribution notices contained
-          within such NOTICE file, excluding those notices that do not
-          pertain to any part of the Derivative Works, in at least one
-          of the following places: within a NOTICE text file distributed
-          as part of the Derivative Works; within the Source form or
-          documentation, if provided along with the Derivative Works; or,
-          within a display generated by the Derivative Works, if and
-          wherever such third-party notices normally appear. The contents
-          of the NOTICE file are for informational purposes only and
-          do not modify the License. You may add Your own attribution
-          notices within Derivative Works that You distribute, alongside
-          or as an addendum to the NOTICE text from the Work, provided
-          that such additional attribution notices cannot be construed
-          as modifying the License.
 
-      You may add Your own copyright statement to Your modifications and
-      may provide additional or different license terms and conditions
-      for use, reproduction, or distribution of Your modifications, or
-      for any such Derivative Works as a whole, provided Your use,
-      reproduction, and distribution of the Work otherwise complies with
-      the conditions stated in this License.
+  // Set Accelerometer sample rate to 208 Hz. Available values are +- 12.0, 26.0, 52.0, 104.0, 208.0, 416.0, 833.0, 1667.0, 3333.0, 6667.0 Hz
+  lsm6dsoxSensor.Set_X_ODR(208.0f);
 
-   5. Submission of Contributions. Unless You explicitly state otherwise,
-      any Contribution intentionally submitted for inclusion in the Work
-      by You to the Licensor shall be under the terms and conditions of
-      this License, without any additional terms or conditions.
-      Notwithstanding the above, nothing herein shall supersede or modify
-      the terms of any separate license agreement you may have executed
-      with Licensor regarding such Contributions.
 
-   6. Trademarks. This License does not grant permission to use the trade
-      names, trademarks, service marks, or product names of the Licensor,
-      except as required for reasonable and customary use in describing the
-      origin of the Work and reproducing the content of the NOTICE file.
+  // Set Gyroscope sample rate to 208 Hz. Available values are +- 12.0, 26.0, 52.0, 104.0, 208.0, 416.0, 833.0, 1667.0, 3333.0, 6667.0 Hz
+  lsm6dsoxSensor.Set_G_ODR(208.0f);
 
-   7. Disclaimer of Warranty. Unless required by applicable law or
-      agreed to in writing, Licensor provides the Work (and each
-      Contributor provides its Contributions) on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-      implied, including, without limitation, any warranties or conditions
-      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-      PARTICULAR PURPOSE. You are solely responsible for determining the
-      appropriateness of using or redistributing the Work and assume any
-      risks associated with Your exercise of permissions under this License.
 
-   8. Limitation of Liability. In no event and under no legal theory,
-      whether in tort (including negligence), contract, or otherwise,
-      unless required by applicable law (such as deliberate and grossly
-      negligent acts) or agreed to in writing, shall any Contributor be
-      liable to You for damages, including any direct, indirect, special,
-      incidental, or consequential damages of any character arising as a
-      result of this License or out of the use or inability to use the
-      Work (including but not limited to damages for loss of goodwill,
-      work stoppage, computer failure or malfunction, or any and all
-      other commercial damages or losses), even if such Contributor
-      has been advised of the possibility of such damages.
+}
 
-   9. Accepting Warranty or Additional Liability. While redistributing
-      the Work or Derivative Works thereof, You may choose to offer,
-      and charge a fee for, acceptance of support, warranty, indemnity,
-      or other liability obligations and/or rights consistent with this
-      License. However, in accepting such obligations, You may act only
-      on Your own behalf and on Your sole responsibility, not on behalf
-      of any other Contributor, and only if You agree to indemnify,
-      defend, and hold each Contributor harmless for any liability
-      incurred by, or claims asserted against, such Contributor by reason
-      of your accepting any such warranty or additional liability.
+void loop() {
 
-   END OF TERMS AND CONDITIONS
+  // Read accelerometer
+  uint8_t acceleroStatus;
+  lsm6dsoxSensor.Get_X_DRDY_Status(&acceleroStatus);
+  if (acceleroStatus == 1) { // Status == 1 means a new data is available
+    int32_t acceleration[3];
+    lsm6dsoxSensor.Get_X_Axes(acceleration);
+    
+    // Plot data for each axis in mg
+    Serial.print("AccelerationX="); Serial.print(acceleration[0]); Serial.print("mg, AccelerationY="); Serial.print(acceleration[1]); Serial.print("mg, AccelerationZ="); Serial.print(acceleration[2]); Serial.println("mg");
+  }
 
-   APPENDIX: How to apply the Apache License to your work.
+  // Read gyroscope
+  uint8_t gyroStatus;
+  lsm6dsoxSensor.Get_G_DRDY_Status(&gyroStatus);
+  if (gyroStatus == 1) { // Status == 1 means a new data is available
+    int32_t rotation[3];
+    lsm6dsoxSensor.Get_G_Axes(rotation);
+    // Plot data for each axis in milli degrees per second
+    Serial.print("RotationX="); Serial.print(rotation[0]); Serial.print("mdps, RotationY="); Serial.print(rotation[1]); Serial.print("mdps, RotationZ="); Serial.print(rotation[2]); Serial.println("mdps");
+  }
 
-      To apply the Apache License to your work, attach the following
-      boilerplate notice, with the fields enclosed by brackets "[]"
-      replaced with your own identifying information. (Don't include
-      the brackets!)  The text should be enclosed in the appropriate
-      comment syntax for the file format. We also recommend that a
-      file or class name and description of purpose be included on the
-      same "printed page" as the copyright notice for easier
-      identification within third-party archives.
+  // Read magno
+  lis3mdl.read();      // get X Y and Z data at once
+  // Then print out the raw data
+  Serial.print("\nX:  "); Serial.print(lis3mdl.x); Serial.print("  \tY:  "); Serial.print(lis3mdl.y); Serial.print("  \tZ:  "); Serial.println(lis3mdl.z); 
 
-   Copyright [yyyy] [name of copyright owner]
+  /* Or....get a new sensor event, normalized to uTesla */
+  sensors_event_t event; 
+  lis3mdl.getEvent(&event);
+  /* Display the results (magnetic field is measured in uTesla) */
+  Serial.print("\tX: "); Serial.print(event.magnetic.x); Serial.print(" \tY: "); Serial.print(event.magnetic.y); Serial.print(" \tZ: "); Serial.print(event.magnetic.z); Serial.println(" uTesla ");
+  Serial.println();
+  
+  delay(10);
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+}
