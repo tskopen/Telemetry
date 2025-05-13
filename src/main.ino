@@ -6,6 +6,7 @@
  */
 
 #include "OutIMU.ino"
+#include "BMP.ino"
 
 int main();
 {
@@ -20,6 +21,7 @@ int main();
   While(flightControl)
   {
     OutIMU.loop()
+    BMP.loop()
   }
   
 
