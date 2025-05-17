@@ -32,10 +32,10 @@ uint8_t readRegister(int file, uint8_t reg)
     return data;
 }
 //Read Data
-uint16_t xAccel (int file)
+uint16_t accelData (int file, uint8_t regL, uint8_t regH)
 {
-  uint8_t l = readRegister(file, LSM6DSOX_REG_OUTX_L_A); //Read
-  uint8_t h = readRegister(file, LSM6DSOX_REG_OUTX_H_A); //Read
+  uint8_t l = readRegister(file, regL); //Read
+  uint8_t h = readRegister(file, regH); //Read
   return (int16_t)((h << 8) | l); //Merge two 8 bit values into one 16 bit
 }  
 
@@ -57,6 +57,10 @@ delay(1000);
 
 digitalWrite(ledOUT, LOW);
 delay(1000);
-cout << endl << "X axis" << xAccel(file);
+  
+cout << "X axis " << accelData(file, LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) << endl;
+cout << "Y axis: " << accelData(file, LSM6DSOX_REG_OUTY_L_A, LSM6DSOX_REG_OUTY_H_A) << endl;
+cout << "Z axis: " << accelData(file, LSM6DSOX_REG_OUTZ_L_A, LSM6DSOX_REG_OUTZ_H_A) << endl;
+  
 cout << endl << "System Started" << endl;
 }
