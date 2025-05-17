@@ -7,24 +7,56 @@
  * Docs on Magno: https://github.com/adafruit/Adafruit_LIS3MDL
  */
 #include "IMU.h"
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
+#include <unistd.h>   // read, write
 #include <iostream>
 #include <wiringPi.h>
 
 using namespace std;
+
+//command I2C for data.
+
+uint8_t readRegister(int file, uint8_t reg) 
+  {
+    // Write the register address
+    if (write(file, &reg, 1) != 1) {
+        // handle error
+    }
+    // Read one byte from the register
+    uint8_t data;
+    if (read(file, &data, 1) != 1) {
+        // handle error
+    }
+    return data;
+}
+//Read Data
+uint16_t xAccel (int file)
+{
+  uint8_t l = readRegister(file, LSM6DSOX_REG_OUTX_L_A); //Read
+  uint8_t h = readRegister(file, LSM6DSOX_REG_OUTX_H_A); //Read
+  return (int16_t)((h << 8) | l); //Merge two 8 bit values into one 16 bit
+}  
+
 int main()
 {
 int ledOUT = 26;
 
 cout << endl << "System Startup" << endl;
-
+  
+int file = open("/dev/i2c-1", O_RDWR);
+ioctl(file, I2C_SLAVE, 0x6A);
+  
 wiringPiSetup();
 pinMode(ledOUT, OUTPUT);
 
 digitalWrite(ledOUT, HIGH);
 delay(1000);
 
+
 digitalWrite(ledOUT, LOW);
 delay(1000);
-
+cout << endl << "X axis" << xAccel(file);
 cout << endl << "System Started" << endl;
 }
