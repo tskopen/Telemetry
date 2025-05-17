@@ -137,5 +137,5 @@
 #define LSM6DSOX_REG_FIFO_DATA_OUT_Z_L   0x7D
 #define LSM6DSOX_REG_FIFO_DATA_OUT_Z_H   0x7E
 
-#define LSM6DSOX_REG_
-
+// Proto types
+uint8_t readRegister(int file, uint8_t reg);
