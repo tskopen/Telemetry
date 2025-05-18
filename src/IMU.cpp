@@ -55,17 +55,6 @@ int main()
     int ledOUT = 26;
     
     cout << endl << "System Startup" << endl;
-//Switch cases for settings
-switch (expression) {
-  case constant-expression1:
-    // statements to execute if expression == constant-expression1
-    break;
-  case constant-expression2:
-    // statements to execute if expression == constant-expression2
-    break;
-  // ... more cases ...
-  default:
-    // statements to execute if no case matches
 }
 
   
