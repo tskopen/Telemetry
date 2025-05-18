@@ -42,6 +42,18 @@ uint16_t accelData (int file, uint8_t regL, uint8_t regH)
 
 int main()
 {
+
+
+
+
+int ledOUT = 26;
+
+cout << endl << "System Startup" << endl;
+
+//i2c setup
+int file = open("/dev/i2c-1", O_RDWR);
+ioctl(file, I2C_SLAVE, 0x6A);
+
 // Set accelerometer settings
 uint8_t config1[2] = {0x10, 0x60}; // CTRL1_XL: 104Hz, 2g
 write(file, config1, 2);
@@ -49,15 +61,6 @@ write(file, config1, 2);
 // Optional: safer reads
 uint8_t config2[2] = {0x12, 0x44}; // CTRL3_C: BDU + IF_INC
 write(file, config2, 2);
-
-
-
-int ledOUT = 26;
-
-cout << endl << "System Startup" << endl;
-  
-int file = open("/dev/i2c-1", O_RDWR);
-ioctl(file, I2C_SLAVE, 0x6A);
   
 wiringPiSetup();
 pinMode(ledOUT, OUTPUT);
