@@ -5,6 +5,7 @@
  * Date:    May 11, 2025
  * Docs on IMU: https://github.com/stm32duino/LSM6DSOX
  * Docs on Magno: https://github.com/adafruit/Adafruit_LIS3MDL
+ * Does NOT use adruino library, use datasheet for register info
  */
 #include "IMU.h"
 #include <fcntl.h>
