@@ -35,8 +35,8 @@ uint8_t readRegister(int file, uint8_t reg)
 //Read Data
 uint16_t accelData (int file, uint8_t regL, uint8_t regH)
 {
-  uint8_t l = readRegister(file, regL); //Read
-  uint8_t h = readRegister(file, regH); //Read
+  int8_t l = readRegister(file, regL); //Read
+  int8_t h = readRegister(file, regH); //Read
   return (int16_t)((h << 8) | l); //Merge two 8 bit values into one 16 bit
 }  
 
