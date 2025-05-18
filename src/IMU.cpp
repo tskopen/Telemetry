@@ -27,7 +27,8 @@ int8_t readRegister(int file, int8_t reg)
     }
     // Read one byte from the register
     int8_t data;
-    if (read(file, &data, 1) != 1) {
+    if (read(file, &data, 1) != 1) 
+    {
         // handle error
     }
     return data;
@@ -35,72 +36,89 @@ int8_t readRegister(int file, int8_t reg)
 //Read Data
 int16_t accelData (int file, int8_t regL, int8_t regH)
 {
-  int8_t l = readRegister(file, regL); //Read
-  int8_t h = readRegister(file, regH); //Read
-  return (int16_t)((h << 8) | l); //Merge two 8 bit values into one 16 bit
+    int8_t l = readRegister(file, regL); //Read
+    int8_t h = readRegister(file, regH); //Read
+    return (int16_t)((h << 8) | l); //Merge two 8 bit values into one 16 bit
 }  
+
+
+
+
+
 
 int main()
 {
+    
+    
+    
+    
+    int ledOUT = 26;
+    
+    cout << endl << "System Startup" << endl;
+//Switch cases for settings
+switch (expression) {
+  case constant-expression1:
+    // statements to execute if expression == constant-expression1
+    break;
+  case constant-expression2:
+    // statements to execute if expression == constant-expression2
+    break;
+  // ... more cases ...
+  default:
+    // statements to execute if no case matches
+}
 
-
-
-
-int ledOUT = 26;
-
-cout << endl << "System Startup" << endl;
-
-//i2c setup
-int file = open("/dev/i2c-1", O_RDWR);
-ioctl(file, I2C_SLAVE, 0x6A);
-
-// Set accelerometer settings
-uint8_t config1[2] = {0x10, 0x60}; // CTRL1_XL: 104Hz, 2g
-write(file, config1, 2);
   
-// CTRL2_G: ODR = 104 Hz, FS = 250 dps, gyro config
-uint8_t configGyro[2] = {0x11, 0x60};  // 0b01100000
-write(file, configGyro, 2);
-  
-// Optional: safer reads
-uint8_t config2[2] = {0x12, 0x44}; // CTRL3_C: BDU + IF_INC
-write(file, config2, 2);
-  
-wiringPiSetup();
-pinMode(ledOUT, OUTPUT);
-
-digitalWrite(ledOUT, HIGH);
-delay(1000);
-
-
-digitalWrite(ledOUT, LOW);
-delay(1000);
-
-  //Temp for trouble shooting... replace while true with func header for use in main.cpp while loop down the raod...
-while (true)
-  {
-  //Calculations... todo, auto detect mode
-  float accelX = (accelData(file, LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) / 16384.0) * 9.80665;  // data/16384.0 = 1.0 g on ±2g mode
-  float accelY = (accelData(file, LSM6DSOX_REG_OUTY_L_A, LSM6DSOX_REG_OUTY_H_A) / 16384.0) * 9.80665;
-  float accelZ = (accelData(file, LSM6DSOX_REG_OUTZ_L_A, LSM6DSOX_REG_OUTZ_H_A) / 16384.0) * 9.80665;
-  float gyroX = (accelData(file, LSM6DSOX_REG_OUTX_L_G, LSM6DSOX_REG_OUTX_H_G) / 131.0); //converts to DPS for ±250 dps
-  float gyroY = (accelData(file, LSM6DSOX_REG_OUTY_L_G, LSM6DSOX_REG_OUTY_H_G) / 131.0);
-  float gyroZ = (accelData(file, LSM6DSOX_REG_OUTZ_L_G, LSM6DSOX_REG_OUTZ_H_G) / 131.0);
-  
-  digitalWrite(ledOUT, HIGH);
-  delay(200);
-  cout << "X axis acceleration: " << accelX << endl;
-  cout << "Y axis acceleration: " << accelY << endl;
-  cout << "Z axis acceleration: " << accelZ << endl;    
-  cout << "X axis Gyro: " << gyroX << endl;
-  cout << "Y axis Gyro: " << gyroY << endl;
-  cout << "Z axis Gyro: " << gyroZ << endl;
-  cout << endl;
-
-  digitalWrite(ledOUT, LOW);
-  delay(200);
-  }
-  
-cout << endl << "System Ended" << endl;
-digitalWrite(ledOUT, LOW);
+    //i2c setup
+    int file = open("/dev/i2c-1", O_RDWR);
+    ioctl(file, I2C_SLAVE, 0x6A);
+    
+    // Set accelerometer settings
+    uint8_t config1[2] = {0x10, 0x60}; // CTRL1_XL: 104Hz, 2g
+    write(file, config1, 2);
+      
+    // CTRL2_G: ODR = 104 Hz, FS = 250 dps, gyro config
+    uint8_t configGyro[2] = {0x11, 0x60};  // 0b01100000
+    write(file, configGyro, 2);
+      
+    // Optional: safer reads
+    uint8_t config2[2] = {0x12, 0x44}; // CTRL3_C: BDU + IF_INC
+    write(file, config2, 2);
+      
+    wiringPiSetup();
+    pinMode(ledOUT, OUTPUT);
+    
+    digitalWrite(ledOUT, HIGH);
+    delay(1000);
+    
+    digitalWrite(ledOUT, LOW);
+    delay(1000);
+    
+      //Temp for trouble shooting... replace while true with func header for use in main.cpp while loop down the raod...
+    while (true)
+      {
+      //Calculations... todo, auto detect mode
+      float accelX = (accelData(file, LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) / 16384.0) * 9.80665;  // data/16384.0 = 1.0 g on ±2g mode
+      float accelY = (accelData(file, LSM6DSOX_REG_OUTY_L_A, LSM6DSOX_REG_OUTY_H_A) / 16384.0) * 9.80665;
+      float accelZ = (accelData(file, LSM6DSOX_REG_OUTZ_L_A, LSM6DSOX_REG_OUTZ_H_A) / 16384.0) * 9.80665;
+      float gyroX = (accelData(file, LSM6DSOX_REG_OUTX_L_G, LSM6DSOX_REG_OUTX_H_G) / 131.0); //converts to DPS for ±250 dps
+      float gyroY = (accelData(file, LSM6DSOX_REG_OUTY_L_G, LSM6DSOX_REG_OUTY_H_G) / 131.0);
+      float gyroZ = (accelData(file, LSM6DSOX_REG_OUTZ_L_G, LSM6DSOX_REG_OUTZ_H_G) / 131.0);
+      
+      digitalWrite(ledOUT, HIGH);
+      delay(200);
+      cout << "X axis acceleration: " << accelX << "M/S" << endl;
+      cout << "Y axis acceleration: " << accelY << "M/S" << endl;
+      cout << "Z axis acceleration: " << accelZ << "M/S" << endl;    
+      cout << "X axis Gyro: " << gyroX << "DPS" <<  endl;
+      cout << "Y axis Gyro: " << gyroY << "DPS" << endl;
+      cout << "Z axis Gyro: " << gyroZ << "DPS" << endl;
+      cout << endl;
+    
+      digitalWrite(ledOUT, LOW);
+      delay(200);
+      }
+      
+    cout << endl << "System Ended" << endl;
+    digitalWrite(ledOUT, LOW);
 }
