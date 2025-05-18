@@ -58,10 +58,11 @@ delay(1000);
 
 digitalWrite(ledOUT, LOW);
 delay(1000);
-  
-cout << "X axis " << accelData(file, LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) << endl;
-cout << "Y axis: " << accelData(file, LSM6DSOX_REG_OUTY_L_A, LSM6DSOX_REG_OUTY_H_A) << endl;
-cout << "Z axis: " << accelData(file, LSM6DSOX_REG_OUTZ_L_A, LSM6DSOX_REG_OUTZ_H_A) << endl;
-  
+for (int i = 0; i < 25; i++)
+  {
+  cout << "X axis " << accelData(file, LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) << endl;
+  cout << "Y axis: " << accelData(file, LSM6DSOX_REG_OUTY_L_A, LSM6DSOX_REG_OUTY_H_A) << endl;
+  cout << "Z axis: " << accelData(file, LSM6DSOX_REG_OUTZ_L_A, LSM6DSOX_REG_OUTZ_H_A) << endl;
+  }
 cout << endl << "System Started" << endl;
 }
