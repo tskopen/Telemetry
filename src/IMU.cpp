@@ -75,12 +75,18 @@ while (true)
   {
   digitalWrite(ledOUT, HIGH);
   delay(100);
-  cout << "X axis " << accelData(file, LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) << endl;
-  cout << "Y axis: " << accelData(file, LSM6DSOX_REG_OUTY_L_A, LSM6DSOX_REG_OUTY_H_A) << endl;
-  cout << "Z axis: " << accelData(file, LSM6DSOX_REG_OUTZ_L_A, LSM6DSOX_REG_OUTZ_H_A) << endl;
+  cout << "X axis acceleration: " << accelData(file, LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) << endl;
+  cout << "Y axis acceleration: " << accelData(file, LSM6DSOX_REG_OUTY_L_A, LSM6DSOX_REG_OUTY_H_A) << endl;
+  cout << "Z axis acceleration: " << accelData(file, LSM6DSOX_REG_OUTZ_L_A, LSM6DSOX_REG_OUTZ_H_A) << endl;
 
+  cout << "X axis Gyro: " << accelData(file, LSM6DSOX_REG_OUTX_L_G, LSM6DSOX_REG_OUTX_H_A) << endl;
+  cout << "Y axis Gyro: " << accelData(file, LSM6DSOX_REG_OUTY_L_G, LSM6DSOX_REG_OUTY_H_A) << endl;
+  cout << "Z axis Gyro: " << accelData(file, LSM6DSOX_REG_OUTZ_L_G, LSM6DSOX_REG_OUTZ_H_A) << endl;
+    
   digitalWrite(ledOUT, LOW);
   delay(100);
   }
-cout << endl << "System Started" << endl;
+  
+cout << endl << "System Ended" << endl;
+digitalWrite(ledOUT, LOW);
 }
