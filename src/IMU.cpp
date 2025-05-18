@@ -33,7 +33,7 @@ int8_t readRegister(int file, int8_t reg)
     return data;
 }
 //Read Data
-int16_t accelData (int file, uint8_t regL, uint8_t regH)
+int16_t accelData (int file, int8_t regL, int8_t regH)
 {
   int8_t l = readRegister(file, regL); //Read
   int8_t h = readRegister(file, regH); //Read
