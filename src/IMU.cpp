@@ -19,14 +19,14 @@ using namespace std;
 
 //command I2C for data.
 
-int8_t readRegister(int file, int8_t reg) 
+int8_t readRegister(int file, uint8_t reg) 
   {
     // Write the register address
     if (write(file, &reg, 1) != 1) {
         // handle error
     }
     // Read one byte from the register
-    int8_t data;
+    uint8_t data = 0;
     if (read(file, &data, 1) != 1) 
     {
         // handle error
@@ -34,10 +34,10 @@ int8_t readRegister(int file, int8_t reg)
     return data;
 }
 //Read Data
-int16_t accelData (int file, int8_t regL, int8_t regH)
+int16_t accelData (int file, uint8_t regL, uint8_t regH)
 {
-    int8_t l = readRegister(file, regL); //Read
-    int8_t h = readRegister(file, regH); //Read
+    uint8_t l = readRegister(file, regL); //Read
+    uint8_t h = readRegister(file, regH); //Read
     return (int16_t)((h << 8) | l); //Merge two 8 bit values into one 16 bit
 }  
 
