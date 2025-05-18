@@ -19,7 +19,7 @@ using namespace std;
 
 //command I2C for data.
 
-int8_t readRegister(int file, uint8_t reg) 
+uint8_t readRegister(int file, uint8_t reg) 
   {
     // Write the register address
     if (write(file, &reg, 1) != 1) {
