@@ -79,14 +79,22 @@ delay(1000);
   //Temp for trouble shooting... replace while true with func header for use in main.cpp while loop down the raod...
 while (true)
   {
+  //Calculations... todo, auto detect mode
+  float accelX = (accelData(file, LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) / 16384.0) * 9.80665;  // data/16384.0 = 1.0 g on ±2g mode
+  float accelY = (accelData(file, LSM6DSOX_REG_OUTY_L_A, LSM6DSOX_REG_OUTY_H_A) / 16384.0) * 9.80665;
+  float accelZ = (accelData(file, LSM6DSOX_REG_OUTZ_L_A, LSM6DSOX_REG_OUTZ_H_A) / 16384.0) * 9.80665;
+  float gyroX = (accelData(file, LSM6DSOX_REG_OUTX_L_G, LSM6DSOX_REG_OUTX_H_G) / 131.0) << endl; //converts to DPS for ±250 dps
+  float gyroY = (accelData(file, LSM6DSOX_REG_OUTY_L_G, LSM6DSOX_REG_OUTY_H_G) / 131.0) << endl;
+  float gyroZ = (accelData(file, LSM6DSOX_REG_OUTZ_L_G, LSM6DSOX_REG_OUTZ_H_G) / 131.0) << endl;
+  
   digitalWrite(ledOUT, HIGH);
   delay(100);
-  cout << "X axis acceleration: " << accelData(file, LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) << endl;
-  cout << "Y axis acceleration: " << accelData(file, LSM6DSOX_REG_OUTY_L_A, LSM6DSOX_REG_OUTY_H_A) << endl;
-  cout << "Z axis acceleration: " << accelData(file, LSM6DSOX_REG_OUTZ_L_A, LSM6DSOX_REG_OUTZ_H_A) << endl;    
-  cout << "X axis Gyro: " << accelData(file, LSM6DSOX_REG_OUTX_L_G, LSM6DSOX_REG_OUTX_H_G) << endl;
-  cout << "Y axis Gyro: " << accelData(file, LSM6DSOX_REG_OUTY_L_G, LSM6DSOX_REG_OUTY_H_G) << endl;
-  cout << "Z axis Gyro: " << accelData(file, LSM6DSOX_REG_OUTZ_L_G, LSM6DSOX_REG_OUTZ_H_G) << endl;
+  cout << "X axis acceleration: " << accelX << endl;
+  cout << "Y axis acceleration: " << accelY << endl;
+  cout << "Z axis acceleration: " << accelZ << endl;    
+  cout << "X axis Gyro: " << gyroX << endl;
+  cout << "Y axis Gyro: " << gyroY << endl;
+  cout << "Z axis Gyro: " << gyroZ << endl;
   cout << endl;
 
   digitalWrite(ledOUT, LOW);
