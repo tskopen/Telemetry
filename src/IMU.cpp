@@ -57,7 +57,11 @@ ioctl(file, I2C_SLAVE, 0x6A);
 // Set accelerometer settings
 uint8_t config1[2] = {0x10, 0x60}; // CTRL1_XL: 104Hz, 2g
 write(file, config1, 2);
-
+  
+// CTRL2_G: ODR = 104 Hz, FS = 250 dps, gyro config
+uint8_t configGyro[2] = {0x11, 0x60};  // 0b01100000
+write(file, configGyro, 2);
+  
 // Optional: safer reads
 uint8_t config2[2] = {0x12, 0x44}; // CTRL3_C: BDU + IF_INC
 write(file, config2, 2);
@@ -71,18 +75,20 @@ delay(1000);
 
 digitalWrite(ledOUT, LOW);
 delay(1000);
+
+  //Temp for trouble shooting... replace while true with func header for use in main.cpp while loop down the raod...
 while (true)
   {
   digitalWrite(ledOUT, HIGH);
   delay(100);
   cout << "X axis acceleration: " << accelData(file, LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) << endl;
   cout << "Y axis acceleration: " << accelData(file, LSM6DSOX_REG_OUTY_L_A, LSM6DSOX_REG_OUTY_H_A) << endl;
-  cout << "Z axis acceleration: " << accelData(file, LSM6DSOX_REG_OUTZ_L_A, LSM6DSOX_REG_OUTZ_H_A) << endl;
+  cout << "Z axis acceleration: " << accelData(file, LSM6DSOX_REG_OUTZ_L_A, LSM6DSOX_REG_OUTZ_H_A) << endl;    
+  cout << "X axis Gyro: " << accelData(file, LSM6DSOX_REG_OUTX_L_G, LSM6DSOX_REG_OUTX_H_G) << endl;
+  cout << "Y axis Gyro: " << accelData(file, LSM6DSOX_REG_OUTY_L_G, LSM6DSOX_REG_OUTY_H_G) << endl;
+  cout << "Z axis Gyro: " << accelData(file, LSM6DSOX_REG_OUTZ_L_G, LSM6DSOX_REG_OUTZ_H_G) << endl;
+  cout << endl;
 
-  cout << "X axis Gyro: " << accelData(file, LSM6DSOX_REG_OUTX_L_G, LSM6DSOX_REG_OUTX_H_A) << endl;
-  cout << "Y axis Gyro: " << accelData(file, LSM6DSOX_REG_OUTY_L_G, LSM6DSOX_REG_OUTY_H_A) << endl;
-  cout << "Z axis Gyro: " << accelData(file, LSM6DSOX_REG_OUTZ_L_G, LSM6DSOX_REG_OUTZ_H_A) << endl;
-    
   digitalWrite(ledOUT, LOW);
   delay(100);
   }
