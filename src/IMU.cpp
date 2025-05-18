@@ -48,15 +48,10 @@ int16_t accelData (int file, int8_t regL, int8_t regH)
 
 int main()
 {
-    
-    
-    
-    
-    int ledOUT = 26;
-    
-    cout << endl << "System Startup" << endl;
-}
 
+    int ledOUT = 26;
+  
+    cout << endl << "System Startup" << endl;
   
     //i2c setup
     int file = open("/dev/i2c-1", O_RDWR);
