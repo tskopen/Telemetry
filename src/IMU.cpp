@@ -91,12 +91,12 @@ int main()
       
       digitalWrite(ledOUT, HIGH);
       delay(200);
-      cout << "X axis acceleration: " << accelX << "M/S" << endl;
-      cout << "Y axis acceleration: " << accelY << "M/S" << endl;
-      cout << "Z axis acceleration: " << accelZ << "M/S" << endl;    
-      cout << "X axis Gyro: " << gyroX << "DPS" <<  endl;
-      cout << "Y axis Gyro: " << gyroY << "DPS" << endl;
-      cout << "Z axis Gyro: " << gyroZ << "DPS" << endl;
+      cout << "X axis acceleration: " << accelX << " M/S" << endl;
+      cout << "Y axis acceleration: " << accelY << " M/S" << endl;
+      cout << "Z axis acceleration: " << accelZ << " M/S" << endl;    
+      cout << "X axis Gyro: " << gyroX << " DPS" <<  endl;
+      cout << "Y axis Gyro: " << gyroY << " DPS" << endl;
+      cout << "Z axis Gyro: " << gyroZ << " DPS" << endl;
       cout << endl;
     
       digitalWrite(ledOUT, LOW);
