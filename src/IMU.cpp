@@ -88,7 +88,7 @@ while (true)
   float gyroZ = (accelData(file, LSM6DSOX_REG_OUTZ_L_G, LSM6DSOX_REG_OUTZ_H_G) / 131.0);
   
   digitalWrite(ledOUT, HIGH);
-  delay(100);
+  delay(200);
   cout << "X axis acceleration: " << accelX << endl;
   cout << "Y axis acceleration: " << accelY << endl;
   cout << "Z axis acceleration: " << accelZ << endl;    
@@ -98,7 +98,7 @@ while (true)
   cout << endl;
 
   digitalWrite(ledOUT, LOW);
-  delay(100);
+  delay(200);
   }
   
 cout << endl << "System Ended" << endl;
