@@ -44,14 +44,9 @@ int16_t accelData (int file, uint8_t regL, uint8_t regH)
 
 
 
-
-
-void readIMUData()
-{
-
-    int ledOUT = 26;
-  
-    cout << endl << "System Startup" << endl;
+void setIMU()
+{  
+    cout << endl << "IMU Setup" << endl;
   
     //i2c setup
     int file = open("/dev/i2c-1", O_RDWR);
@@ -68,16 +63,11 @@ void readIMUData()
     // Optional: safer reads
     uint8_t config2[2] = {0x12, 0x44}; // CTRL3_C: BDU + IF_INC
     write(file, config2, 2);
-      
-    wiringPiSetup();
-    pinMode(ledOUT, OUTPUT);
-    
-    digitalWrite(ledOUT, HIGH);
-    delay(1000);
-    
-    digitalWrite(ledOUT, LOW);
-    delay(1000);
-    
+}
+
+
+void readIMUData(int ledOUT)
+{
       //Calculations... todo, auto detect mode
       float accelX = (accelData(file, LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) / 16384.0) * 9.80665;  // data/16384.0 = 1.0 g on ±2g mode
       float accelY = (accelData(file, LSM6DSOX_REG_OUTY_L_A, LSM6DSOX_REG_OUTY_H_A) / 16384.0) * 9.80665;
@@ -85,8 +75,19 @@ void readIMUData()
       float gyroX = (accelData(file, LSM6DSOX_REG_OUTX_L_G, LSM6DSOX_REG_OUTX_H_G) / 131.0); //converts to DPS for ±250 dps
       float gyroY = (accelData(file, LSM6DSOX_REG_OUTY_L_G, LSM6DSOX_REG_OUTY_H_G) / 131.0);
       float gyroZ = (accelData(file, LSM6DSOX_REG_OUTZ_L_G, LSM6DSOX_REG_OUTZ_H_G) / 131.0);
-      
+
+      digitalWrite(ledOUT, HIGH);
+      delay(200);
+    // COUT variables
+      cout << "X axis acceleration: " << accelX << " M/S" << endl;
+      cout << "Y axis acceleration: " << accelY << " M/S" << endl;
+      cout << "Z axis acceleration: " << accelZ << " M/S" << endl;    
+      cout << "X axis Gyro: " << gyroX << " DPS" <<  endl;
+      cout << "Y axis Gyro: " << gyroY << " DPS" << endl;
+      cout << "Z axis Gyro: " << gyroZ << " DPS" << endl;
+      cout << endl;
+    
+      digitalWrite(ledOUT, LOW);
+      delay(200);
   
-      
-    cout << endl << "System Ended" << endl;
-}
+      }
