@@ -61,7 +61,7 @@ void IMUClass::setIMU() {
     }
 
     // Verify WHO_AM_I register (should return 0x6C)
-    uint8_t whoami = readRegister(file, LSM6DSOX_REG_WHO_AM_I);
+    uint8_t whoami = readRegister(LSM6DSOX_REG_WHO_AM_I);
     cout << "WHO_AM_I: 0x" << hex << (int)whoami << dec << endl;
     if (whoami != 0x6C) {
         cerr << "Incorrect WHO_AM_I value" << endl;
