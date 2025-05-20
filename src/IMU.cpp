@@ -19,7 +19,7 @@ using namespace std;
 
 //command I2C for data.
 
-uint8_t IMUClass::readRegister(int file, uint8_t reg) 
+uint8_t IMUClass::readRegister(uint8_t reg) 
   {
     // Write the register address
     if (write(file, &reg, 1) != 1) {
@@ -34,7 +34,7 @@ uint8_t IMUClass::readRegister(int file, uint8_t reg)
     return data;
 }
 //Read Data
-int16_t IMUClass::accelData(int file, uint8_t regL, uint8_t regH)
+int16_t IMUClass::accelData(uint8_t regL, uint8_t regH)
 {
     uint8_t l = readRegister(file, regL); //Read
     uint8_t h = readRegister(file, regH); //Read
