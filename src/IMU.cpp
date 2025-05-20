@@ -19,7 +19,7 @@ using namespace std;
 
 //command I2C for data.
 
-uint8_t readRegister(int file, uint8_t reg) 
+uint8_t IMUClass::readRegister(int file, uint8_t reg) 
   {
     // Write the register address
     if (write(file, &reg, 1) != 1) {
@@ -34,7 +34,7 @@ uint8_t readRegister(int file, uint8_t reg)
     return data;
 }
 //Read Data
-int16_t accelData (int file, uint8_t regL, uint8_t regH)
+int16_t IMUClass::accelData (int file, uint8_t regL, uint8_t regH)
 {
     uint8_t l = readRegister(file, regL); //Read
     uint8_t h = readRegister(file, regH); //Read
@@ -44,7 +44,7 @@ int16_t accelData (int file, uint8_t regL, uint8_t regH)
 
 
 
-void setIMU()
+void IMUClass::setIMU()
 {  
     cout << endl << "IMU Setup" << endl;
   
@@ -66,7 +66,7 @@ void setIMU()
 }
 
 
-void readIMUData(int file, int ledOUT)
+void IMUClass::readIMUData(int file, int ledOUT)
 {
       //Calculations... todo, auto detect mode
       float accelX = (accelData(file, LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) / 16384.0) * 9.80665;  // data/16384.0 = 1.0 g on ±2g mode
