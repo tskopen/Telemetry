@@ -34,7 +34,7 @@ uint8_t IMUClass::readRegister(int file, uint8_t reg)
     return data;
 }
 //Read Data
-int16_t IMUClass::accelData (int file, uint8_t regL, uint8_t regH)
+int16_t IMUClass::accelData(int file, uint8_t regL, uint8_t regH)
 {
     uint8_t l = readRegister(file, regL); //Read
     uint8_t h = readRegister(file, regH); //Read
