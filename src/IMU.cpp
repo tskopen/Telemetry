@@ -99,8 +99,7 @@ void IMUClass::readIMUData(int ledOUT)
       float gyroY = (accelData(LSM6DSOX_REG_OUTY_L_G, LSM6DSOX_REG_OUTY_H_G) / 131.0);
       float gyroZ = (accelData(LSM6DSOX_REG_OUTZ_L_G, LSM6DSOX_REG_OUTZ_H_G) / 131.0);
 
-      digitalWrite(ledOUT, HIGH);
-      delay(200);
+
     // COUT variables
       cout << "X axis acceleration: " << accelX << " M/S" << endl;
       cout << "Y axis acceleration: " << accelY << " M/S" << endl;
@@ -109,8 +108,14 @@ void IMUClass::readIMUData(int ledOUT)
       cout << "Y axis Gyro: " << gyroY << " DPS" << endl;
       cout << "Z axis Gyro: " << gyroZ << " DPS" << endl;
       cout << endl;
-    
-      digitalWrite(ledOUT, LOW);
-      delay(200);
-  
+
+
+
+  //Update IMU settings
+  if ((accelData(LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) / 16384.0 /*set to 1g */) > 2 /*2g*/)
+    {
+        digitalWrite(ledOUT, HIGH); delay(200); digitalWrite(ledOUT, LOW); delay(200); //LED FLASH
+        // Configure accelerometer (104Hz, ±4g)
+        uint8_t config1[2] = {LSM6DSOX_REG_CTRL1_XL, 0x40}; // 0x40 = 104Hz, ±2g
+    }
       }
