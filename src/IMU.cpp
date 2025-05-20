@@ -36,8 +36,8 @@ uint8_t IMUClass::readRegister(uint8_t reg)
 //Read Data
 int16_t IMUClass::accelData(uint8_t regL, uint8_t regH)
 {
-    uint8_t l = readRegister(file, regL); //Read
-    uint8_t h = readRegister(file, regH); //Read
+    uint8_t l = readRegister(regL); //Read
+    uint8_t h = readRegister(regH); //Read
     return (int16_t)((h << 8) | l); //Merge two 8 bit values into one 16 bit
 }  
 
