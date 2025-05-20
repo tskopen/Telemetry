@@ -66,7 +66,7 @@ void setIMU()
 }
 
 
-void readIMUData(int ledOUT)
+void readIMUData(int file, int ledOUT)
 {
       //Calculations... todo, auto detect mode
       float accelX = (accelData(file, LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) / 16384.0) * 9.80665;  // data/16384.0 = 1.0 g on ±2g mode

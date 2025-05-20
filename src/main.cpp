@@ -9,18 +9,22 @@
  */
 
 #include "IMU.cpp"
+#include "IMU.h"
+
 #include <wiringPi.h>
 
 using namespace std;
 
 int main()
 {  
+      int ledOUT = 21;
+      
       wiringPiSetup();
       pinMode(ledOUT, OUTPUT);
       IMU.setIMU();
 
       //Main data loop
-      while true
+      while (true)
       {
           IMU.readIMUData(21);
       }
