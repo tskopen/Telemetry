@@ -139,3 +139,7 @@
 
 // Proto types
 uint8_t readRegister(int file, uint8_t reg);
+int16_t accelData (int file, uint8_t regL, uint8_t regH);
+void setIMU();
+void readIMUData(int ledOUT);
+
