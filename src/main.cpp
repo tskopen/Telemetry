@@ -8,7 +8,7 @@
  * Does NOT use adruino library, use datasheet for register info
  */
 
-#include "IMU.cpp"
+#include "IMU.h"
 #include <wiringPi.h>
 
 using namespace std;
