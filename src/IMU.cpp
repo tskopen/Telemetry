@@ -92,7 +92,7 @@ void IMUClass::setIMU() {
 void IMUClass::readIMUData(int ledOUT)
 {
       //Calculations... todo, auto detect mode
-      float accelX = (accelData(LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) / 16384.0) * 9.80665;  // data/16384.0 = 1.0 g on ±2g mode
+      float accelX = (accelData(LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) / 16384.0 /*convert to G/s*/) * 9.80665/*convert to M/s*/; 
       float accelY = (accelData(LSM6DSOX_REG_OUTY_L_A, LSM6DSOX_REG_OUTY_H_A) / 16384.0) * 9.80665;
       float accelZ = (accelData(LSM6DSOX_REG_OUTZ_L_A, LSM6DSOX_REG_OUTZ_H_A) / 16384.0) * 9.80665;
       float gyroX = (accelData(LSM6DSOX_REG_OUTX_L_G, LSM6DSOX_REG_OUTX_H_G) / 131.0); //converts to DPS for ±250 dps
@@ -112,10 +112,11 @@ void IMUClass::readIMUData(int ledOUT)
 
 
   //Update IMU settings
-  if ((accelData(LSM6DSOX_REG_OUTX_L_A, LSM6DSOX_REG_OUTX_H_A) / 16384.0 /*set to 1g */) > 2 /*2g*/)
-    {
-        digitalWrite(ledOUT, HIGH); delay(200); digitalWrite(ledOUT, LOW); delay(200); //LED FLASH
-        // Configure accelerometer (104Hz, ±4g)
-        uint8_t config1[2] = {LSM6DSOX_REG_CTRL1_XL, 0x40}; // 0x40 = 104Hz, ±2g
-    }
+  //go from 2g acceleration to 4g
+  if (abs(accelX) > (2.0 * 9.80665) || abs(accelY) > (2.0 * 9.80665) || abs(accelZ) > (2.0 * 9.80665)) //2g * (m/s)/g
+      {
+          digitalWrite(ledOUT, HIGH); delay(200); digitalWrite(ledOUT, LOW); delay(200); //LED FLASH
+          // Configure accelerometer (104Hz, ±4g)
+          uint8_t config1[2] = {LSM6DSOX_REG_CTRL1_XL, 0x5A}; // 5A = 208Hz, ±4g Table 51.
       }
+  }
