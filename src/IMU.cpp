@@ -19,7 +19,7 @@ using namespace std;
 
 //command I2C for data.
 
-uint8_t IMUClass::readRegister(int file, uint8_t reg) 
+uint8_t IMUClass::readRegister(uint8_t reg) 
   {
     // Write the register address
     if (write(file, &reg, 1) != 1) {
@@ -34,7 +34,7 @@ uint8_t IMUClass::readRegister(int file, uint8_t reg)
     return data;
 }
 //Read Data
-int16_t IMUClass::accelData(int file, uint8_t regL, uint8_t regH)
+int16_t IMUClass::accelData(uint8_t regL, uint8_t regH)
 {
     uint8_t l = readRegister(file, regL); //Read
     uint8_t h = readRegister(file, regH); //Read
@@ -44,27 +44,50 @@ int16_t IMUClass::accelData(int file, uint8_t regL, uint8_t regH)
 
 
 
-void IMUClass::setIMU()
-{  
+void IMUClass::setIMU() {  
     cout << endl << "IMU Setup" << endl;
   
-    //i2c setup
-    int file = open("/dev/i2c-1", O_RDWR);
-    ioctl(file, I2C_SLAVE, 0x6A);
-    
-    // Set accelerometer settings
-    uint8_t config1[2] = {0x10, 0x60}; // CTRL1_XL: 104Hz, 2g
-    write(file, config1, 2);
-      
-    // CTRL2_G: ODR = 104 Hz, FS = 250 dps, gyro config
-    uint8_t configGyro[2] = {0x11, 0x60};  // 0b01100000
-    write(file, configGyro, 2);
-      
-    // Optional: safer reads
-    uint8_t config2[2] = {0x12, 0x44}; // CTRL3_C: BDU + IF_INC
-    write(file, config2, 2);
-}
+    // Open I2C bus
+    file = open("/dev/i2c-1", O_RDWR);
+    if (file < 0) {
+        cerr << "Failed to open I2C bus" << endl;
+        return;
+    }
 
+    // Set slave address
+    if (ioctl(file, I2C_SLAVE, 0x6A) < 0) {
+        cerr << "Failed to set I2C address" << endl;
+        return;
+    }
+
+    // Verify WHO_AM_I register (should return 0x6C)
+    uint8_t whoami = readRegister(file, LSM6DSOX_REG_WHO_AM_I);
+    cout << "WHO_AM_I: 0x" << hex << (int)whoami << dec << endl;
+    if (whoami != 0x6C) {
+        cerr << "Incorrect WHO_AM_I value" << endl;
+        return;
+    }
+
+    // Configure accelerometer (104Hz, ±2g)
+    uint8_t config1[2] = {LSM6DSOX_REG_CTRL1_XL, 0x40}; // 0x40 = 104Hz, ±2g
+    if (write(file, config1, 2) != 2) {
+        cerr << "Failed to configure accelerometer" << endl;
+    }
+
+    // Configure gyroscope (104Hz, ±250dps)
+    uint8_t configGyro[2] = {LSM6DSOX_REG_CTRL2_G, 0x40}; // 0x40 = 104Hz, ±250dps
+    if (write(file, configGyro, 2) != 2) {
+        cerr << "Failed to configure gyroscope" << endl;
+    }
+
+    // Enable block data update (prevent reading halfway through update)
+    uint8_t config3[2] = {LSM6DSOX_REG_CTRL3_C, 0x44}; // BDU + IF_INC
+    if (write(file, config3, 2) != 2) {
+        cerr << "Failed to set CTRL3_C" << endl;
+    }
+
+    cout << "IMU configured successfully" << endl;
+}
 
 void IMUClass::readIMUData(int ledOUT)
 {
