@@ -9,8 +9,6 @@
  */
 
 #include "IMU.cpp"
-#include "IMU.h"
-
 #include <wiringPi.h>
 
 using namespace std;
