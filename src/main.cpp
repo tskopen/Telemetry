@@ -20,12 +20,13 @@ int main()
       
       wiringPiSetup();
       pinMode(ledOUT, OUTPUT);
+      
       IMU.setIMU();
 
       //Main data loop
       while (true)
       {
-          IMU.readIMUData(21);
+          IMU.readIMUData(ledOUT);
       }
   
 }
