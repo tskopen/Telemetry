@@ -9,6 +9,8 @@
  */
 
 #include "IMU.h"
+#include "routines.h"
+
 #include <wiringPi.h>
 
 using namespace std;
@@ -18,15 +20,13 @@ int main()
       IMUClass IMU;
       int ledOUT = 26;
       
-      wiringPiSetup();
-      pinMode(ledOUT, OUTPUT);
-      digitalWrite(ledOUT, HIGH); delay(2000);
+
+      void LEDblinker(1000, ledOUT, 5) {
       IMU.setIMU();
 
       //Main data loop
       while (true)
       {
-          digitalWrite(ledOUT, HIGH); delay(2000); digitalWrite(ledOUT, LOW); delay(2000);
           IMU.readIMUData(ledOUT);
             delay(100);
       }
