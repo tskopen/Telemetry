@@ -14,7 +14,7 @@ void routineClass::LEDblinker(unsigned long duration, int pin, int blinks)
 {
     wiringPiSetup();
     pinMode(pin, OUTPUT);
-    digitalWrite(pin, LOW);
+    digitalWrite(pin, HIGH);
 
     static unsigned long startMillis= 0;
     static int blinkCount = 0;
