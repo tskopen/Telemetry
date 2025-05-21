@@ -20,7 +20,7 @@ int main()
       
       wiringPiSetup();
       pinMode(ledOUT, OUTPUT);
-      
+      digitalWrite(ledOUT, HIGH); delay(2000);
       IMU.setIMU();
 
       //Main data loop
