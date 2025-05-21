@@ -26,7 +26,7 @@ int main()
       //Main data loop
       while (true)
       {
-          digitalWrite(ledOUT, HIGH); delay(200); digitalWrite(ledOUT, LOW); delay(200);
+          digitalWrite(ledOUT, HIGH); delay(2000); digitalWrite(ledOUT, LOW); delay(2000);
           IMU.readIMUData(ledOUT);
             delay(100);
       }
