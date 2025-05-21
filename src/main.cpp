@@ -16,7 +16,7 @@ using namespace std;
 int main()
 {  
       IMUClass IMU;
-      int ledOUT = 21;
+      int ledOUT = 26;
       
       wiringPiSetup();
       pinMode(ledOUT, OUTPUT);
