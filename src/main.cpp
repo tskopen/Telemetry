@@ -18,10 +18,11 @@ using namespace std;
 int main()
 {  
       IMUClass IMU;
+      routines routine;
       int ledOUT = 26;
       
 
-      LEDblinker(1000, ledOUT, 5);
+      routine.LEDblinker(1000, ledOUT, 5);
       IMU.setIMU();
 
       //Main data loop
