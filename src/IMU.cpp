@@ -122,8 +122,9 @@ void IMUClass::readIMUData(int ledOUT)
 
     if (accelData(LSM6DSOX_REG_OUTX_L_G, LSM6DSOX_REG_OUTX_H_G) >= /*250dps RAW output value*/ 32750 || accelData(LSM6DSOX_REG_OUTY_L_G, LSM6DSOX_REG_OUTY_H_G) >= 32750 || accelData(LSM6DSOX_REG_OUTZ_L_G, LSM6DSOX_REG_OUTZ_H_G) >= 32750 )//2g * (m/s)/g
       {
-          digitalWrite(ledOUT, HIGH); delay(200); digitalWrite(ledOUT, LOW); delay(200); //LED FLASH
+          digitalWrite(21, HIGH); delay(200); digitalWrite(21, LOW); delay(200); //LED FLASH
           // Configure GYRO (208HZ, ±500)
           uint8_t config1[2] = {LSM6DSOX_REG_CTRL2_G, 0x54}; // 54 =±500 dps
+          cout << config1[2];
       }
   }
