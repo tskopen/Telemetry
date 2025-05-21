@@ -113,10 +113,17 @@ void IMUClass::readIMUData(int ledOUT)
 
   //Update IMU settings
   //go from 2g acceleration to 4g
-  if (abs(accelX) > (2.0 * 9.80665) || abs(accelY) > (2.0 * 9.80665) || abs(accelZ) > (2.0 * 9.80665)) //2g * (m/s)/g
+  if (abs(accelX) >= (2.0 * 9.80665) || abs(accelY) >= (2.0 * 9.80665) || abs(accelZ) >= (2.0 * 9.80665)) //2g * (m/s)/g
       {
           digitalWrite(ledOUT, HIGH); delay(200); digitalWrite(ledOUT, LOW); delay(200); //LED FLASH
           // Configure accelerometer (104Hz, ±4g)
           uint8_t config1[2] = {LSM6DSOX_REG_CTRL1_XL, 0x5A}; // 5A = 208Hz, ±4g Table 51.
+      }
+
+    if (abs(gryoX) >= (2.0 * (abs(gryoX) * 131.0)) || abs(gryoY) >= (2.0 * (abs(gryoY) * 131.0)) || abs(gryoZ) >= (2.0 * (abs(gryoZ) * 131.0))) //2g * (m/s)/g
+      {
+          digitalWrite(ledOUT, HIGH); delay(200); digitalWrite(ledOUT, LOW); delay(200); //LED FLASH
+          // Configure GYRO (208HZ, ±500)
+          uint8_t config1[2] = {LSM6DSOX_REG_CTRL2_G, 0x54}; // 54 =±500 dps
       }
   }
