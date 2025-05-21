@@ -10,7 +10,8 @@
 
 using namespace std;
 
-void routineClass::LEDblinker(unsigned long duration, int pin, int blinks) {
+void routineClass::LEDblinker(unsigned long duration, int pin, int blinks) 
+{
     wiringPiSetup();
     pinMode(pin, OUTPUT);
     digitalWrite(pin, LOW);
@@ -22,6 +23,7 @@ void routineClass::LEDblinker(unsigned long duration, int pin, int blinks) {
     unsigned long interval = duration / (blinks);
   
     for(int i = 0; i < blinks; i++)
+    {
       // Initialize the timer on the first call
       if (i < blinks) 
       {
@@ -36,7 +38,7 @@ void routineClass::LEDblinker(unsigned long duration, int pin, int blinks) {
         startMillis = millis(); // Reset the timer
         blinkCount++;
 
-        }
+      }
     }
 }
 
