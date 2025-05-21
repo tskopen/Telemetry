@@ -10,7 +10,7 @@
 
 #include "IMU.h"
 #include "routines.h"
-
+#include <wiringPi.h>
 using namespace std;
 
 int main()
