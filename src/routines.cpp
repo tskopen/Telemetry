@@ -34,7 +34,7 @@ void routineClass::LEDblinker(unsigned long duration, int pin, int blinks)
       if (millis() - startMillis >= interval) 
       {
         digitalWrite(pin, HIGH);
-          
+          delay(200);
         startMillis = millis(); // Reset the timer
         blinkCount++;
 
