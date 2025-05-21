@@ -18,7 +18,7 @@ using namespace std;
 int main()
 {  
       IMUClass IMU;
-      routines routine;
+      routineClass routine;
       int ledOUT = 26;
       
 
