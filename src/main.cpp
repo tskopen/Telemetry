@@ -27,6 +27,7 @@ int main()
       while (true)
       {
           IMU.readIMUData(ledOUT);
+            delay(100);
       }
   
 }
