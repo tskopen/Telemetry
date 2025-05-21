@@ -21,7 +21,7 @@ int main()
       int ledOUT = 26;
       
 
-      void LEDblinker(1000, ledOUT, 5);
+      LEDblinker(1000, ledOUT, 5);
       IMU.setIMU();
 
       //Main data loop
