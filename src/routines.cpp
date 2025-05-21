@@ -6,6 +6,7 @@
  */
 #include "routines.h"
 #include <chrono>
+#include <wiringPi.h>
 
 using namespace std;
 
