@@ -9,7 +9,7 @@
 
 using namespace std;
 
-void LEDblinker(unsigned long duration, int pin, int blinks) {
+void routine::LEDblinker(unsigned long duration, int pin, int blinks) {
     wiringPiSetup();
     pinMode(pin, OUTPUT);
     digitalWrite(pin, LOW);
