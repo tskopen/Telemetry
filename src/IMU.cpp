@@ -120,7 +120,7 @@ void IMUClass::readIMUData(int ledOUT)
           uint8_t config1[2] = {LSM6DSOX_REG_CTRL1_XL, 0x5A}; // 5A = 208Hz, ±4g Table 51.
       }
 
-    if (abs(gryoX) >= (2.0 * (abs(gryoX) * 131.0)) || abs(gryoY) >= (2.0 * (abs(gryoY) * 131.0)) || abs(gryoZ) >= (2.0 * (abs(gryoZ) * 131.0))) //2g * (m/s)/g
+    if (abs(gyroX) >= (2.0 * (abs(gyroX) * 131.0)) || abs(gyroY) >= (2.0 * (abs(gyroY) * 131.0)) || abs(gyroZ) >= (2.0 * (abs(gyroZ) * 131.0))) //2g * (m/s)/g
       {
           digitalWrite(ledOUT, HIGH); delay(200); digitalWrite(ledOUT, LOW); delay(200); //LED FLASH
           // Configure GYRO (208HZ, ±500)
