@@ -15,6 +15,7 @@ using namespace std;
 
 int main()
 {  
+      wiringPiSetup();
       IMUClass IMU;
       routineClass routine;
       int ledOUT = 26;
