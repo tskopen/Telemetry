@@ -19,7 +19,6 @@ int main()
       wiringPiSetup();
       IMUClass IMU;
       magnetometerClass magneto;
-      routineClass routine;
       int ledOUT = 26;
       
       IMU.setIMU();
