@@ -5,7 +5,7 @@
  * Docs on IMU: https://github.com/stm32duino/LSM6DSOX
  * Docs on Magno: https://github.com/adafruit/Adafruit_LIS3MDL
  */
-
+#include <cstdint>
 // LIS3MDL Register Address Map
 #define LIS3MDL_REG_OFFSET_X_REG_L_M    0x05
 #define LIS3MDL_REG_OFFSET_X_REG_H_M    0x06
