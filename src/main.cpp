@@ -9,7 +9,6 @@
  */
 
 #include "IMU.h"
-#include "routines.h"
 #include <wiringPi.h>
 using namespace std;
 
@@ -17,11 +16,7 @@ int main()
 {  
       wiringPiSetup();
       IMUClass IMU;
-      routineClass routine;
       int ledOUT = 26;
-      
-
-      routine.LEDblinker(1000, ledOUT, 5);
       IMU.setIMU();
 
       //Main data loop
