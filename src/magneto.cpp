@@ -96,7 +96,7 @@ void magnetometerClass::setMagneto()
       cout << "Magnetometer configured successfully" << endl;
   }
 
-void magnetometerClass::readMagentoData()
+void magnetometerClass::readMagnetoData()
   {
         //Calculations... todo, auto detect mode
         float magnoX = magnetoData(LIS3MDL_REG_OUT_X_L, LIS3MDL_REG_OUT_X_H); 
