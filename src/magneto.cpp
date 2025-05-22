@@ -6,6 +6,7 @@
  * Docs on Magno: https://github.com/adafruit/Adafruit_LIS3MDL
  */
 #include "magneto.h"
+#include <cstdint>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
