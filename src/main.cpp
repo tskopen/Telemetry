@@ -23,16 +23,14 @@ int main()
       routineClass routine;
       int ledOUT = 26;
       
-
-      routine.LEDblinker(1000, ledOUT, 5);
       IMU.setIMU();
-
+      magneto.setMagneto();
       //Main data loop
       while (true)
       {
           IMU.readIMUData(ledOUT);
           magneto.readMagnetoData();
-            delay(100);
+          delay(100);
       }
   
 }
