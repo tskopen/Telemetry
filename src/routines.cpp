@@ -15,12 +15,11 @@ void routineClass::LEDblinker(unsigned long duration, int pin, int blinks)
 {
     pinMode(pin, OUTPUT);
     digitalWrite(pin, LOW);
+    digitalWrite(pin, HIGH);
+    digitalWrite(pin, LOW);
 
-    auto start = std::chrono::steady_clock::now();
-    static int blinkCount = 0;
-
-    // Calculate the interval between each blink
-    unsigned long interval = duration / (blinks);
+    digitalWrite(pin, HIGH);
+    digitalWrite(pin, LOW);
 
           }
       }
