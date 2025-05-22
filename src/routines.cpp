@@ -16,27 +16,12 @@ void routineClass::LEDblinker(unsigned long duration, int pin, int blinks)
     pinMode(pin, OUTPUT);
     digitalWrite(pin, LOW);
 
-    static unsigned long startMillis= 0;
+    auto start = std::chrono::steady_clock::now();
     static int blinkCount = 0;
 
     // Calculate the interval between each blink
     unsigned long interval = duration / (blinks);
-    while(blinkCount < blinks)
-    {
-        for(int i = 0; i < blinks; i++)
-        {
-          // Initialize the timer on the first call
-          if (i < blinks) 
-          {
-              startMillis = millis();
-          }
-      
-          // Check if it's time to toggle the LED state
-          if (millis() - startMillis >= interval) 
-          {
-            digitalWrite(pin, HIGH);
-            startMillis = millis(); // Reset the timer
-            blinkCount++;
+
           }
       }
     }
