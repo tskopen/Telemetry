@@ -13,6 +13,8 @@
 #include <iostream>
 #include <wiringPi.h>
 
+using namespace std;
+
 uint8_t magnetometerClass::readRegister(uint8_t reg) 
   {
     // Write the register address
