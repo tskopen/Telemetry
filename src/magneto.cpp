@@ -36,7 +36,9 @@ int16_t magnetometerClass::magnetoData(uint8_t regL, uint8_t regH)
     uint8_t h = readRegister(regH); //Read
     return (int16_t)((h << 8) | l); //Merge two 8 bit values into one 16 bit
 }  
-void magnetometerClass::setmagneto() {
+
+void magnetometerClass::setmagneto() 
+{
     cout << endl << "Magno Setup" << endl;
 
     // Open I2C bus
@@ -96,9 +98,9 @@ void magnetometerClass::setmagneto() {
 void magnetometerClass::readMagentoData()
 {
       //Calculations... todo, auto detect mode
-      float magnoX = (magnetoData(LIS3MDL_REG_OUT_X_L, LIS3MDL_REG_OUT_X_H); 
-      float magnoY = (magnetoData(LIS3MDL_REG_OUT_Y_L, LIS3MDL_REG_OUT_Y_H);
-      float magnoZ = (magnetoData(LIS3MDL_REG_OUT_Z_L, LIS3MDL_REG_OUT_Z_H);
+      float magnoX = magnetoData(LIS3MDL_REG_OUT_X_L, LIS3MDL_REG_OUT_X_H); 
+      float magnoY = magnetoData(LIS3MDL_REG_OUT_Y_L, LIS3MDL_REG_OUT_Y_H);
+      float magnoZ = magnetoData(LIS3MDL_REG_OUT_Z_L, LIS3MDL_REG_OUT_Z_H);
 
 
     // COUT variables
