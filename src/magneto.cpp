@@ -105,8 +105,7 @@ void magnetometerClass::readMagentoData()
   
   
       // COUT variables
-        cout << "Magno Data: " << magnoX << " M/S" << endl;
-        cout << "Y axis acceleration: " << magnoY << " M/S" << endl;
-        cout << "Z axis acceleration: " << magnoZ << " M/S" << endl;    
-        cout << endl;
+        cout << "Magno Data: " << magnoX << " Guass" << endl;
+        cout << "Magno Data: " << magnoY << " Guass" << endl;
+        cout << "Magno Data: " << magnoZ << " Guass" << endl;    
   }
