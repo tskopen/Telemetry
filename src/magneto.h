@@ -38,7 +38,7 @@ class magnetometerClass
     uint8_t readRegister(uint8_t reg);
     int16_t magnetoData(uint8_t regL, uint8_t regH);
     void setMagneto();
-    void readMagentoData();
+    void readMagnetoData();
   private:
     int file;
 };
