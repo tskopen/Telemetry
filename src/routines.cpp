@@ -20,9 +20,5 @@ void routineClass::LEDblinker(unsigned long duration, int pin, int blinks)
 
     digitalWrite(pin, HIGH);
     digitalWrite(pin, LOW);
-
-          }
-      }
-    }
 }
 
