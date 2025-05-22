@@ -5,8 +5,8 @@
  * Docs on IMU: https://github.com/stm32duino/LSM6DSOX
  * Docs on Magno: https://github.com/adafruit/Adafruit_LIS3MDL
  */
-#include "magneto.h"
 #include <cstdint>
+#include "magneto.h"
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
