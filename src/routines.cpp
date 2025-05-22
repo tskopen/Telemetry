@@ -6,15 +6,15 @@
  */
 #include "routines.h"
 #include <chrono>
+#include <thread>
 #include <wiringPi.h>
 
 using namespace std;
 
 void routineClass::LEDblinker(unsigned long duration, int pin, int blinks) 
 {
-    wiringPiSetup();
     pinMode(pin, OUTPUT);
-    digitalWrite(pin, HIGH);
+    digitalWrite(pin, LOW);
 
     static unsigned long startMillis= 0;
     static int blinkCount = 0;
@@ -34,7 +34,6 @@ void routineClass::LEDblinker(unsigned long duration, int pin, int blinks)
       if (millis() - startMillis >= interval) 
       {
         digitalWrite(pin, HIGH);
-          delay(200);
         startMillis = millis(); // Reset the timer
         blinkCount++;
 
