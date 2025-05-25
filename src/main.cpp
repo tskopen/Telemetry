@@ -19,11 +19,14 @@ int main()
       wiringPiSetup();
       IMUClass IMU;
       magnetometerClass magneto;
+  
       int ledOUT = 26;
       
       IMU.setIMU();
       magneto.setMagneto();
-
+  
+      //Main data loop
+int main
       while (true)
       {
           IMU.readIMUData(ledOUT);
