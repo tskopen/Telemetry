@@ -141,9 +141,11 @@
 class IMUClass 
 {
   public:
-    int file;
     uint8_t readRegister(uint8_t reg);
     int16_t accelData(uint8_t regL, uint8_t regH);
     void setIMU();
     void readIMUData(int ledOUT);
+  private:
+    int file;
+
 };

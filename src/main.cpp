@@ -9,10 +9,9 @@
  */
 
 #include "IMU.h"
-#include "magento.h"
-
-#include "routines.h"
+#include "magneto.h"
 #include <wiringPi.h>
+
 using namespace std;
 
 int main()
@@ -20,12 +19,14 @@ int main()
       wiringPiSetup();
       IMUClass IMU;
       magnetometerClass magneto;
-      routineClass routine;
+  
       int ledOUT = 26;
       
       IMU.setIMU();
       magneto.setMagneto();
+  
       //Main data loop
+int main
       while (true)
       {
           IMU.readIMUData(ledOUT);
