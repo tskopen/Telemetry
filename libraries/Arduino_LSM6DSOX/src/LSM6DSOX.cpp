@@ -84,8 +84,8 @@ int LSM6DSOXClass::begin()
     return 0;
   }
 
-  //set the gyroscope control register to work at 104 Hz, 2000 dps and in bypass mode
-  writeRegister(LSM6DSOX_CTRL2_G, 0x4C);
+  //set the gyroscope control register to work at 104 Hz, 250 dps and in bypass mode
+  writeRegister(LSM6DSOX_CTRL2_G, 0x40);  // 104 Hz, 250 dps
 
   // Set the Accelerometer control register to work at 104 Hz, 4 g,and in bypass mode and enable ODR/4
   // low pass filter (check figure9 of LSM6DSOX's datasheet)
@@ -158,9 +158,9 @@ int LSM6DSOXClass::readGyroscope(float& x, float& y, float& z)
     return 0;
   }
 
-  x = data[0] * 2000.0 / 32768.0;
-  y = data[1] * 2000.0 / 32768.0;
-  z = data[2] * 2000.0 / 32768.0;
+  x = data[0] * 250.0 / 32768.0;
+  y = data[1] * 250.0 / 32768.0;
+  z = data[2] * 250.0 / 32768.0;
 
   return 1;
 }
