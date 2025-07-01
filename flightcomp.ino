@@ -17,6 +17,7 @@
 
 //Gyro and Accel are dead reckoning so are set to 0... Magno + GPS should give reference if needed... IMU should aim to be start level for now
 double adx = 0;
+double ady = 0;
 double adz = 0;
 
 double gpx = 0;
