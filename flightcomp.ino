@@ -4,6 +4,8 @@
 #include <Adafruit_LIS3MDL.h>
 #include <Arduino_LSM6DSOX.h>
 #include "servos.h"
+#include <cmath>
+
 #define SerialPort Serial
 #define I2C2_SDA    21
 #define I2C2_SCL    22
@@ -13,12 +15,21 @@
 
   Adafruit_LIS3MDL magnetometer;
 
+//Gyro and Accel are dead reckoning so are set to 0... Magno + GPS should give reference if needed... IMU should aim to be start level for now
+double adx = 0;
+double adz = 0;
+
+double gpx = 0;
+double gpy = 0;
+double gpz = 0;
+
+
 void setup() {
 
   Serial.begin(115200);
-  servocontrol();
-
-
+  for (int i = 0; i < NUM_SERVOS; i++) {
+    servos[i].init_servo();   // <-- THIS is how you access init_servo()
+  }
 
   Wire.begin(I2C2_SDA, I2C2_SCL);
   Wire.setClock(100000);
@@ -45,44 +56,119 @@ Serial.println("Starting LIS3MDL...");
 
 void loop() 
 {
-  servostest();
-  delay(25);
+  static unsigned long next = micros();
+  const unsigned long interval = 9620;
 
-  //posfuser();
+  unsigned long now = micros();
+  if ((long)(now - next) >= 0) {
+
+    ControlServo("+X", 90);
+    ControlServo("+Y", 90);
+    ControlServo("-X", 90);
+    ControlServo("-Y", 90);
+
+    posfuser();
+    
+    next += interval;
+  }
+
 }
+
+
+//set itital IMU pos 0 for dead reckoning
+
+float wrapAngle(float angle) {
+  while (angle > 180) angle -= 360;
+  while (angle < -180) angle += 360;
+  return angle;
+}
+
 void posfuser()
 {
-  float ax, ay, az;
-  float gx, gy, gz;
+  static bool initialized_gyro = false;
+
   sensors_event_t magEvent;
+  magnetometer.getEvent(&magEvent);
 
-  if (IMU.accelerationAvailable() && IMU.gyroscopeAvailable()) 
-  {
+
+  float mx = magEvent.magnetic.x; 
+  float my = magEvent.magnetic.y; 
+  float mz = magEvent.magnetic.z;
+
+    float ax, ay, az;
+    float gax, gay, gaz;
+
     IMU.readAcceleration(ax, ay, az);
-    IMU.readGyroscope(gx, gy, gz);
+    IMU.readGyroscope(gax, gay, gaz);
 
-    magnetometer.getEvent(&magEvent);
+//Default is 2000DPS, Library adjusted to 250... if you reimport you must change the function in the library to 250 (as its hard coded)
+// gpx, gyro position axis
+  gpx += (gax / 104);
+  gpy += (gay / 104);
+  gpz += (gaz / 104);
 
-//Raw Data
+  gpx = wrapAngle(gpx);
+  gpy = wrapAngle(gpy);
+  gpz = wrapAngle(gpz);
+    //Deda reckoning of Aceel data 
+    // accel distance axis
+// Accel + magno angle calculations
+float pitch = atan2(ax, sqrt(ay * ay + az * az));
+float roll  = atan2(ay, sqrt(ax * ax + az * az));
+float pitch_degrees = wrapAngle(pitch * (180.0 / PI));
+float roll_degrees  = wrapAngle(roll * (180.0 / PI));
+//yaw tilt calculations
+float mx_comp = mx * cos(pitch) + mz * sin(pitch);
+float my_comp = mx * sin(roll) * sin(pitch) + my * cos(roll) - mz * sin(roll) * cos(pitch);
+float yaw = atan2(-my_comp, mx_comp);  // yaw in radians
+float yaw_degrees = wrapAngle(yaw * (180.0 / PI));
+//Reset gyro to magno readings to start off with similar readings
+  if (!initialized_gyro) {
+    gpx = pitch_degrees;
+    gpy = roll_degrees;
+    gpz = yaw_degrees;
+    initialized_gyro = true;  // only run this once
+  }
 
-    Serial.print(ax); Serial.print('\t');
-    Serial.print(ay); Serial.print('\t');
-    Serial.print(az); Serial.print('\t');
+  // Filter coefficient
+  const float alpha = .25;
+    // Complementary filter fusion.... ex. alpha = .98 trust gyro 98% and magno 2%
+    float fused_pitch = wrapAngle(alpha * gpx + (1 - alpha) * pitch_degrees);
+    float fused_roll  = wrapAngle(alpha * gpy + (1 - alpha) * roll_degrees);
+    float fused_yaw   = wrapAngle(alpha * gpz + (1 - alpha) * yaw_degrees);
 
-    Serial.print(gx); Serial.print('\t');
-    Serial.print(gy); Serial.print('\t');
-    Serial.print(gz); Serial.print('\t');
+  // Rotate [0, 0, 9.81] by pitch/roll to find what part of gravity appears on each axis
+  float gx = 9.81 * sin(pitch);  // simplified; ideally use a rotation matrix
+  float gy = 9.81 * sin(roll);
+  float gz = sqrt(9.81*9.81 - gx*gx - gy*gy);
 
-    Serial.print(magEvent.magnetic.x); Serial.print('\t');
-    Serial.print(magEvent.magnetic.y); Serial.print('\t');
-    Serial.println(magEvent.magnetic.z); Serial.print('\t');
+  float ax_real = ax * 9.81 - gx;
+  float ay_real = ay * 9.81 - gy;
+  float az_real = az * 9.81 - gz;
 
 
-//Calculations 
+    adx += (ax_real / 104 /*Hz*/);
+    ady += (ay_real / 104);
+    adz += (az_real / 104);
+
+    Serial.print(adx); Serial.print('\t');
+    Serial.print(ady); Serial.print('\t');
+    Serial.print(adz); Serial.print('\t');
+
+/*
+  Serial.print(fused_pitch); Serial.print('\t');
+  Serial.print(fused_roll);  Serial.print('\t');
+  Serial.println(fused_yaw);
+*/
+
+
+
+
+
+
+
 
 //Fusion https://www.mathworks.com/help/nav/ref/ahrs.html
-
-
-    delay(25);
-  }
 }
+
+// See: http://en.wikipedia.org/wiki/Fast_inverse_square_root
