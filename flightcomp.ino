@@ -27,15 +27,17 @@ double gpz = 0;
 
 void setup() {
 
+  //155200 and above Baud avoid packetloss
   Serial.begin(115200);
   for (int i = 0; i < NUM_SERVOS; i++) {
     servos[i].init_servo();   // <-- THIS is how you access init_servo()
   }
+  while (!Serial);
 
   Wire.begin(I2C2_SDA, I2C2_SCL);
   Wire.setClock(100000);
 
-Serial.println("Starting LIS3MDL...");
+  Serial.println("Starting LIS3MDL...");
   if (!magnetometer.begin_I2C(LIS3MDL_ADDR, &Wire)) 
   {
     Serial.println("ERROR: Could not find LIS3MDL at 0x1C");
@@ -55,8 +57,7 @@ Serial.println("Starting LIS3MDL...");
 }
 
 
-void loop() 
-{
+void loop() {
   static unsigned long next = micros();
   const unsigned long interval = 9620;
 
@@ -69,10 +70,8 @@ void loop()
     ControlServo("-Y", 90);
 
     posfuser();
-    
     next += interval;
   }
-
 }
 
 
