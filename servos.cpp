@@ -3,9 +3,9 @@
 
 AxisServo servos[] = {
   {"+Y", Servo(), 12},
-  {"+X", Servo(), 13},
+  {"-X", Servo(), 13},
   {"-Y", Servo(), 27},
-  {"-X", Servo(), 14}
+  {"+X", Servo(), 14}
 };
 
 const int NUM_SERVOS = sizeof(servos) / sizeof(servos[0]);
