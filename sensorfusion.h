@@ -1,22 +1,65 @@
-#ifndef SENSORS_H
-#define SENSORS_H
-
-#include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BusIO_Register.h>
-#include <Adafruit_LIS3MDL.h>
 #include <Arduino_LSM6DSOX.h>
+#include <Adafruit_LIS3MDL.h>
+
+#define SerialPort Serial
+#define I2C2_SDA    21
+#define I2C2_SCL    22
+
+#define LSM6DSOX_ADDR 0x6A 
+#define LIS3MDL_ADDR 0x1C 
 
 extern Adafruit_LIS3MDL magnetometer;
 
-extern double adx, ady, adz;
-extern double gpx, gpy, gpz;
-extern float fused_pitch, fused_yaw, fused_roll;
+// Declare all global variables as extern here
+extern float distanceXAxis;
+extern float distanceYAxis;
+extern float distanceZAxis;
 
-void sensor_setup();
-void applyServoControl(float fused_pitch, float fused_yaw, float fused_roll);
-void servo_control_loop(float& fused_pitch, float& fused_yaw);
-void posfuser();
-float wrapAngle(float angle);
+extern float accelerationXAxis;
+extern float accelerationYAxis;
+extern float accelerationZAxis;
 
-#endif
+extern float gyroPositionXAxis;
+extern float gyroPositionYAxis;
+extern float gyroPositionZAxis;
+
+extern float gyroAccelerationXAxis;
+extern float gyroAccelerationYAxis;
+extern float gyroAccelerationZAxis;
+
+extern float magneticXAxis;
+extern float magneticYAxis;
+extern float magneticZAxis;
+
+extern float gForceAccelerationXAxis;
+extern float gForceAccelerationYAxis;
+extern float gForceAccelerationZAxis;
+
+extern float MPSAccelerationXAxis;
+extern float MPSAccelerationYAxis;
+extern float MPSAccelerationZAxis;
+
+extern float deadReckoningXAxis;
+extern float deadReckoningYAxis;
+extern float deadReckoningZAxis;
+
+extern float pitch;
+extern float roll;
+
+extern float gyroIMUCorrectionXAxis;
+extern float gyroIMUCorrectionYAxis;
+extern float gyroIMUCorrectionZAxis;
+
+extern float gravityX;
+extern float gravityY;
+extern float gravityZ;
+
+extern bool launch;
+extern float yawMagnetometer;
+
+// Function declarations
+void readRawSensorData();
+void duringFlightOrientationTracking();
+void preFlightOrientationTracking();
+void duringFlightPositionalTracking();
+void preFlightPositionalTracking();
