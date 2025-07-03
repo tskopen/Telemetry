@@ -29,14 +29,20 @@ float mapGyroToServo(float angle, float minAngle, float maxAngle) {
   return map(angle * 100, minAngle * 100, maxAngle * 100, 0, 180);
 }
 
-void controlLoop() {
+void pitchYawControlLoop() {
   // X-axis rotation controlled by servos on Y-axis
   ControlServo("+Y", gyroPositionXAxis);
   ControlServo("-Y", -1 * gyroPositionXAxis);
 
   // Y-axis rotation controlled by servos on X-axis
-  ControlServo("+X", gyroPositionYAxis);
-  ControlServo("-X", -1 * gyroPositionYAxis);
+  ControlServo("+X", -1 * gyroPositionYAxis);
+  ControlServo("-X", gyroPositionYAxis);
 }
+void rollControlLoop() {
+  // X-axis rotation controlled by servos on Y-axis
+  //ControlServo("+Y", gyroPositionZAxis);
+  //ControlServo("-Y", -1 * gyroPositionZAxis);
 
-
+  ControlServo("+X", gyroAccelerationZAxis / 90); //90 DPS authority limitor
+  ControlServo("-X", gyroAccelerationZAxis / 90);
+}

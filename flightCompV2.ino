@@ -2,7 +2,6 @@
 #include <servos.h>
 
 
-
 void setup() {
   //155200 and above Baud avoid packetloss
   Serial.begin(115200);
@@ -17,12 +16,17 @@ void setup() {
   for (int i = 0; i < NUM_SERVOS; i++) {
     servos[i].init_servo();
   }
+
 }
 
-void loop(){
 
+void loop(){
   readRawSensorData(); 
-  controlLoop();
+  pitchYawControlLoop();
+  if (gyroAccelerationZAxis > 90){
+    rollControlLoop();
+  }
+
 
   if (!launch){
     
@@ -51,11 +55,11 @@ void loop(){
   Serial.print(deadReckoningZAxis); Serial.println('\t');
   */
 
-/*
   Serial.print(gyroAccelerationXAxis); Serial.print('\t');
   Serial.print(gyroAccelerationYAxis); Serial.print('\t');
   Serial.print(gyroAccelerationZAxis); Serial.print('\t');
-*/
+
+
   Serial.print(gyroPositionXAxis); Serial.print('\t');
   Serial.print(gyroPositionYAxis); Serial.print('\t');
   Serial.print(gyroPositionZAxis); Serial.println('\t');

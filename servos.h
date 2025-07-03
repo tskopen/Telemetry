@@ -19,9 +19,10 @@ struct AxisServo {
 
 };
 
-void ControlServo(String name, double angle);
+void ControlServo(String name, float angle);
 float mapGyroToServo(float angle, float minAngle, float maxAngle);
-void controlLoop();
+void pitchYawControlLoop();
+void rollControlLoop();
 extern const int NUM_SERVOS;
 extern AxisServo servos[];
 
