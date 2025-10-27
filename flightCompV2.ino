@@ -20,6 +20,8 @@ void setup() {
   setupFlash();
 
 }
+unsigned long lastSendTime = 0;
+const unsigned long sendInterval = 100; // 100 ms = 0.1 sec
 
 
 void loop(){
@@ -50,16 +52,25 @@ void loop(){
   Serial.print(gForceAccelerationXAxis); Serial.print('\t');
   Serial.print(gForceAccelerationYAxis); Serial.print('\t');
   Serial.print(gForceAccelerationZAxis); Serial.print('\t');
-*/
+
   Serial.print(deadReckoningXAxis); Serial.print('\t');
   Serial.print(deadReckoningYAxis); Serial.print('\t');
-  Serial.print(deadReckoningZAxis); Serial.println('\t');
-  
+      Serial.print(deadReckoningZAxis);
+
+*/
+  unsigned long currentTime = millis();
+
+  // Only run every 100 ms
+  if (currentTime - lastSendTime >= sendInterval) {
+    lastSendTime = currentTime;
+  Serial.print(magneticXAxis);
+  Serial.println('\t');
+  }  
 /*
   Serial.print(gyroAccelerationXAxis); Serial.print('\t');
   Serial.print(gyroAccelerationYAxis); Serial.print('\t');
   Serial.print(gyroAccelerationZAxis); Serial.print('\t');
-*/
+
 
   Serial.print(gyroPositionXAxis); Serial.print('\t');
   Serial.print(gyroPositionYAxis); Serial.print('\t');
@@ -68,5 +79,5 @@ void loop(){
   Serial.print(magneticXAxis); Serial.print('\t');
   Serial.print(magneticYAxis); Serial.print('\t');
   Serial.println(magneticZAxis); 
-
+*/
 }
