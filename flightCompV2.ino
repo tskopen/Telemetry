@@ -21,8 +21,7 @@ void setup() {
 
 }
 unsigned long lastSendTime = 0;
-const unsigned long sendInterval = 100; // 100 ms = 0.1 sec
-
+const unsigned long sendInterval = 10; 
 
 void loop(){
   readRawSensorData(); 
@@ -62,10 +61,21 @@ void loop(){
 
   // Only run every 100 ms
   if (currentTime - lastSendTime >= sendInterval) {
-    lastSendTime = currentTime;
-  Serial.print(magneticXAxis);
-  Serial.println('\t');
-  }  
+  lastSendTime = currentTime;
+  Serial.print("MX:");
+  Serial.println(magneticXAxis);
+  Serial.print("MY:");
+  Serial.println(magneticYAxis);
+  Serial.print("MZ:");
+  Serial.println(magneticZAxis);
+
+  Serial.print("GX:");
+  Serial.println(gyroAccelerationXAxis);
+  Serial.print("GY:");
+  Serial.println(gyroAccelerationYAxis);
+  Serial.print("GZ:");
+  Serial.println(gyroAccelerationZAxis);
+
 /*
   Serial.print(gyroAccelerationXAxis); Serial.print('\t');
   Serial.print(gyroAccelerationYAxis); Serial.print('\t');
@@ -80,4 +90,5 @@ void loop(){
   Serial.print(magneticYAxis); Serial.print('\t');
   Serial.println(magneticZAxis); 
 */
+}
 }
