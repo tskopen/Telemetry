@@ -21,8 +21,7 @@ void setup() {
 
 }
 unsigned long lastSendTime = 0;
-const unsigned long sendInterval = 100; // 100 ms = 0.1 sec
-
+const unsigned long sendInterval = 10; 
 
 void loop(){
   readRawSensorData(); 
