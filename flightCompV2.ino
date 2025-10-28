@@ -69,7 +69,14 @@ void loop(){
   Serial.println(magneticYAxis);
   Serial.print("MZ:");
   Serial.println(magneticZAxis);
-  }  
+
+  Serial.print("GX:");
+  Serial.println(gyroAccelerationXAxis);
+  Serial.print("GY:");
+  Serial.println(gyroAccelerationYAxis);
+  Serial.print("GZ:");
+  Serial.println(gyroAccelerationZAxis);
+
 /*
   Serial.print(gyroAccelerationXAxis); Serial.print('\t');
   Serial.print(gyroAccelerationYAxis); Serial.print('\t');
@@ -84,4 +91,5 @@ void loop(){
   Serial.print(magneticYAxis); Serial.print('\t');
   Serial.println(magneticZAxis); 
 */
+}
 }
