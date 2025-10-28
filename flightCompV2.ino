@@ -62,9 +62,13 @@ void loop(){
 
   // Only run every 100 ms
   if (currentTime - lastSendTime >= sendInterval) {
-    lastSendTime = currentTime;
-  Serial.print(magneticXAxis);
-  Serial.println('\t');
+  lastSendTime = currentTime;
+  Serial.print("MX:");
+  Serial.println(magneticXAxis);
+  Serial.print("MY:");
+  Serial.println(magneticYAxis);
+  Serial.print("MZ:");
+  Serial.println(magneticZAxis);
   }  
 /*
   Serial.print(gyroAccelerationXAxis); Serial.print('\t');
