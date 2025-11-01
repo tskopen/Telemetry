@@ -1,6 +1,8 @@
 #include <sensorfusion.h>
 #include <servos.h>
 #include "flash.h"
+#include "FlightLoraRadio.cpp"
+
 
 
 void setup() {
@@ -8,6 +10,21 @@ void setup() {
 
   Wire.begin(I2C2_SDA, I2C2_SCL);
   Wire.setClock(100000);
+
+  SPI.beginTransaction(SPISettings(14000000, MSBFIRST, SPI_MODE0)); 
+
+
+  pinMode(lora5MOSI, OUTPUT);
+
+
+  pinMode(lora7MISO, INPUT);
+
+
+  pinMode(lora6SCK,OUTPUT);
+
+
+  pinMode(lora8CSN,OUTPUT);
+
 
   IMU.begin();
   magnetometer.begin_I2C(LIS3MDL_ADDR, &Wire);
