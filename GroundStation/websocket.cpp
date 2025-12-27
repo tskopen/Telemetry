@@ -76,7 +76,7 @@ ws_.write(boost::asio::buffer(text_));
 
 int main()
 {
-        WebSocketClient client("tskopen.com", "8080", "test");
+        WebSocketClient client("websocket.tskopen.com", "3000", "test");
         
         string response = client.handshakeServer();
 
